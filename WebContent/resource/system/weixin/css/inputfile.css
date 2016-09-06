@@ -1,0 +1,58 @@
+.fileC{
+	float:left;
+	position: relative;
+}
+
+.fileC a{
+	position:absolute;
+	top: 0;
+	left:8px;
+}
+
+.fileC input{
+	position:absolute;
+	top: 0;
+	left:-200px;
+	font-size:17px;
+	filter: alpha(opacity=0); 
+	CURSOR: pointer; opacity: 0;
+}
+
+
+.fileA {
+	position: relative;
+	width:400px;
+	float:left;
+	left:0;
+	top:0;
+}
+
+.fileA .fileS{
+	position: absolute;
+    filter: alpha(opacity=0); 
+    font-size: 27px;
+    width: 390px;
+    CURSOR: pointer; 
+    opacity: 0;
+	left:0;
+	top:0;
+	z-index:99;
+}
+
+.fileA .fileT{
+	position: absolute;
+	width: 310px;
+	left:0;
+	top:0;
+	z-index: 9;
+}
+
+.fileA button{
+	position: absolute;
+	left:332px;
+	top:0;
+	border: 0;
+	color:#FFFFFF;
+	font-size:16px;
+	z-index: 9;
+}

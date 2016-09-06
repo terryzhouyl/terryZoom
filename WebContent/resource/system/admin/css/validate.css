@@ -1,0 +1,14 @@
+﻿p#vtip {position: absolute; padding: 10px; left: 5px; font-size: 0.8em; background-color: white; border: 1px solid #a6c9e2; -moz-border-radius: 5px; -webkit-border-radius: 5px; z-index: 9999;}
+p#vtip #vtipArrow { position: absolute; top: -10px; left: 5px }
+.input_validation-failed { border: 2px solid #FF0000; color:red;}
+.ipt input{border:1px solid #ccc; background:#fff; margin:10px 0; height:22px;line-height:22px;width: 200px;}
+.ipt select{border:1px solid #ccc; background:#fff; height:22px; line-height:22px; margin:10px 0;}
+.ipt span{width:80px; display:inline-block; text-align:right;}
+.ipt textarea{border:1px solid #ccc; background:#fff; margin:10px 0;}
+.ipt_button{width:90px; height:32px; line-height:32px; border:1px solid #ccc; background:#aeaeae; border-radius:5px; margin-top:15px;}
+
+.ipt_l input{border:1px solid #ccc; background:#fff; margin:10px 0; height:22px;line-height:22px;width: 200px;}
+.ipt_l select{border:1px solid #ccc; background:#fff; height:22px; line-height:22px; margin:10px 0;}
+.ipt_l span{width:120px; display:inline-block; text-align:right;}
+
+

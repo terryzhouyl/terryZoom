@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task" 
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/aop     http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+       http://www.springframework.org/schema/tx      http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/task    http://www.springframework.org/schema/task/spring-task-3.0.xsd"
+       default-autowire="byName">
+
+	<description>Spring公共配置</description>
+
+	<!-- 注册Sevice使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	<context:component-scan base-package="com.terry">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<!-- <bean id="userDaoImpl" class="com.sunjoypai.dao.impl.UserDaoImpl" /> -->
+	
+<!--     国际化的消息资源文件
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                在web环境中一定要定位到classpath 否则默认到当前web应用下找 
+                 <value>classpath:lang/resource</value>
+            </list>
+        </property>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="cacheSeconds" value="60"/>
+    </bean>
+    <bean id="messageSourceHelper" class="com.jason.framework.spring.support.MessageSourceHelper">
+       <property name="messageSource">
+            <ref local="messageSource" />
+       </property>
+   </bean> -->
+    
+    
+    <!--加载数据配置文件 继承了PropertyPlaceholderConfigurer类-->
+	<bean id="systemProperties"  class="com.terry.util.SystemProperties" init-method="init">
+		<property name="locationFiles">
+			<list><value>system.properties</value></list>
+		</property>
+	</bean> 
+	
+	<!-- 数据源配置 -->
+ 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass"><value>${DATASOURCE_driverClass}</value></property>
+		<property name="jdbcUrl"><value>${DATASOURCE_jdbcUrl}</value></property>
+		<property name="user"><value>${DATASOURCE_user}</value></property>
+		<property name="password"><value>${DATASOURCE_password}</value></property>
+		<property name="maxStatements"><value>${DATASOURCE_C3P0_maxStatements}</value></property>
+		<property name="initialPoolSize"><value>${DATASOURCE_C3P0_initialPoolSize}</value></property>
+		<property name="maxPoolSize"><value>${DATASOURCE_C3P0_maxPoolSize}</value></property>
+		<property name="minPoolSize"><value>${DATASOURCE_C3P0_minPoolSize}</value></property>
+		<property name="maxIdleTime"><value>${DATASOURCE_C3P0_maxIdleTime}</value></property>
+		<property name="idleConnectionTestPeriod"><value>${DATASOURCE_C3P0_idleConnectionTestPeriod}</value></property>
+		<property name="acquireRetryAttempts"><value>${DATASOURCE_C3P0_acquireRetryAttempts}</value></property>
+		<property name="breakAfterAcquireFailure"><value>${DATASOURCE_C3P0_breakAfterAcquireFailure}</value></property>
+		<property name="testConnectionOnCheckin"><value>${DATASOURCE_C3P0_testConnectionOnCheckin}</value></property>
+	</bean> 
+	
+	<!--hibernate映射-->
+ 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingLocations"><list><value>classpath*:xml/*.hbm.xml</value></list></property>
+		
+		<property name="packagesToScan" value="com.terry.entity" /> 
+		<property name="hibernateProperties">
+			<props>
+				<prop key="current_session_context_class">${HIBERNATE_current_session_context_class}</prop>  
+				<prop key="hibernate.dialect">${HIBERNATE_dialect}</prop>
+				<prop key="hibernate.show_sql">${HIBERNATE_show_sql}</prop>
+				<prop key="hibernate.query.substitutions">${HIBERNATE_QUERY_substitutions}</prop>
+				<prop key="hibernate.cache.use_second_level_cache">${HIBERNATE_CACHE_use_second_level_cache}</prop>
+                <prop key="hibernate.cache.use_query_cache">${HIBERNATE_CACHE_use_query_cache}</prop>
+                <prop key="hibernate.cache.provider_class">${HIBERNATE_CACHE_provider_class}</prop>
+                <prop key="hibernate.cache.region.factory_class">${HIBERNATE_CACHE_region.factory_class}</prop>
+                <prop key="hibernate.cache.provider_configuration_file_resource_path">${HIBERNATE_CACHE_provider_configuration_file_resource_path}</prop>
+                <prop key="hibernate.jdbc.use_scrollable_resultset">${HIBERNATE_JDBC_use_scrollable_resultset}</prop>
+			</props>
+		</property>
+	</bean> 
+	
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory"><ref local="sessionFactory" /></property>
+	</bean>
+	<!-- 配置详细的事务定义,事务的通知 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- get方法是只读的  -->
+			<tx:method name="get*" read-only="true"/>
+			<!-- 其他使用默认的事务设置 -->
+			<tx:method name="*" isolation="DEFAULT" propagation="REQUIRED"/>
+		</tx:attributes>
+	</tx:advice>
+	<!-- AOP配置元素 -->
+	<aop:config>
+		<!-- 配置切入点 -->
+		<aop:pointcut id="myPointcut"  expression="execution(* com.terry.service.*.*(..))" />
+		<!-- 指定在myPointcut切入点应用txAdvice事务增加处理 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="myPointcut" />
+	</aop:config>
+	
+	
+	<!-- 系统常量类注入 -->
+<!-- 	<bean name="valueListFactory" class="com.jason.framework.util.valuelist.ValueListFactory">
+		<property name="constantsHolders">
+			<list><value>com.teccore.enjoylife.CommonVar</value></list>
+		</property>
+	</bean> -->
+	
+	<!-- freeMarker -->
+<!-- 	<bean id="freeMarkerConfigurer" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/jsp/mail/" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">1800</prop>模板更新延时  
+                <prop key="default_encoding">UTF-8</prop>  
+                <prop key="locale">zh_CN</prop>  
+			</props>
+		</property>
+	</bean> -->
+	
+	<!-- 定义mailService，用于发送邮件 -->
+<!-- 	<bean id="mailService"
+		class="com.jason.framework.util.mail.DefaultMailService">
+		指定发送邮件的SMTP服务器
+		<property name="host" value="${EMAIL_SERVICE_HOST}" />
+		<property name="port" value="${EMAIL_SERVICE_PORT}" />
+		创建邮件Session的属性
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">${EMAIL_SERVICE_AUTH}</prop>
+				<prop key="mail.smtp.timeout">${EMAIL_SERVICE_TIMEOUT}</prop>
+				<prop key="mail.smtp.host">${EMAIL_SERVICE_HOST}</prop>
+				<prop key="mail.smtp.port">${EMAIL_SERVICE_PORT}</prop>
+				<prop key="mail.smtp.username">${EMAIL_ACCOUNT}</prop>
+				<prop key="mail.smtp.password">${EMAIL_PASSWORD}</prop>
+			</props>
+		</property>
+		确定登陆邮件服务器的用户名
+		<property name="username" value="${EMAIL_ACCOUNT}" />
+		确定登陆服务器的密码
+		<property name="password" value="${EMAIL_PASSWORD}"/>
+	</bean> -->
+</beans>
