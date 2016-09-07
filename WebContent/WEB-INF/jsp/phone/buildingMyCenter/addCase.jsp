@@ -20,7 +20,7 @@
 			<div id="upload"><img src="${ctx}/resource/system/phone/buildingMyCenter/image/publish.png" alt="" /></div>
 		</div>
 		<div class="content">
-			<textarea name="desc" id="desc" placeholder="请输入案例描述" maxlength="13"></textarea>
+			<textarea name="desc" id="desc" placeholder="请输入案例描述，12字内……" maxlength="13"></textarea>
 			<div style="width:300px;margin:10px auto" id="wait">
 			</div>
 			<div class="picList clearfix">

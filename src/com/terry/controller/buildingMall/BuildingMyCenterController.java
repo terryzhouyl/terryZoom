@@ -3,6 +3,7 @@ package com.terry.controller.buildingMall;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -12,14 +13,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.terry.BusinessException;
+import com.terry.CommonVar;
 import com.terry.controller.MyController;
+import com.terry.entity.BuildingStore;
+import com.terry.entity.WeixinUser;
+import com.terry.service.BuildingGoodsService;
 import com.terry.util.ImageUtil;
 
 @Controller("phoneBuildingMyCenterController")
 @RequestMapping(value = "phone/buildingMyCenter")
 public class BuildingMyCenterController extends MyController{
 	
-	
+	@Resource(name="buildingGoodsServiceImpl")
+	BuildingGoodsService buildingGoodsServiceImpl;
 	
 	/**
 	 * 1.进入个人中心
@@ -281,41 +288,81 @@ public class BuildingMyCenterController extends MyController{
 	}
 	
 	/**
-	 * 7.2 添加新案例
+	 * 7.2跳转 添加新案例页面
 	 * @param model
 	 * @param request
 	 * @param storeId
 	 * @return
 	 */
 	@RequestMapping("/addCase")
-	public String add_case (Model model,HttpServletRequest request,Long storeId){ 
+	public String add_case (Model model,HttpServletRequest request,Long storeId){ 						
 		return "/phone/buildingMyCenter/addCase";
 	}
 	
 	/**
-	 * 上传案例图片
+	 * 7.3上传案例图片
 	 * @return
 	 */
 	@RequestMapping(value = "/uploadCasePic")
-	public ResponseEntity<String> uploadCasePic(Model model,@RequestParam("cmfile") CommonsMultipartFile[] cmfiles,Integer storeId){
+	public ResponseEntity<String> uploadCasePic(Model model,@RequestParam("cmfile") CommonsMultipartFile[] cmfiles,HttpServletRequest request){
 		boolean status = true;
 		String msg = "上传成功";
-		List<String> list = null;
-		try{
-			String path = "store/"+storeId;
-			list =	ImageUtil.uploadMutiPicture(cmfiles,null,path);
-		}
-		catch(Exception e){
-			list = new ArrayList<>();
+		List<String> list = null;			
+		BuildingStore store = buildingGoodsServiceImpl.getStoreInfo(request);
+		if(store == null) {
+			msg = "对不起，您暂未申请店铺";
 			status = false;
-			msg = "上传失败";
-			log.error("店铺"+storeId+"案例图片上传失败",e);
-		}				
+		}
+		else {			
+			try{
+				String path = "store/"+store.getId();
+				list =	ImageUtil.uploadMutiPicture(cmfiles,null,path);
+			}
+			catch(Exception e){
+				list = new ArrayList<>();
+				status = false;
+				msg = "上传失败";
+				log.error("店铺"+store+"案例图片上传失败",e);
+			}				
+		}
 		return renderData(status, msg, list);
 	}
 	
 	/**
-	 * 7.3 案例删除
+	 * 7.4 保存案例
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/saveCase")
+	public ResponseEntity<String> saveCase(String description,String imagePath,Integer storeId){ 
+		
+		boolean status = true;
+		String msg = "保存案例成功";
+		Integer caseId = null;
+		if(storeId == null) {
+			msg = "您暂未开启店铺，无法上传案例";
+			status = false;
+		}
+		else {			
+			try{			
+				caseId = buildingGoodsServiceImpl.saveBuildingCase(description, imagePath,storeId);
+			}
+			catch(Exception e) {
+				status = false;
+				msg = "保存案例失败";
+				if(caseId == null) {				
+					log.error("店铺"+storeId+"保存案例失败",e);
+				}
+				else {
+					log.error("店铺"+storeId+"保存案例"+caseId+"失败",e);
+				}
+			}				
+		}
+		return renderMsg(status, msg);
+	}
+	
+	/**
+	 * 7.5 案例删除
 	 * @param id
 	 * @return
 	 */

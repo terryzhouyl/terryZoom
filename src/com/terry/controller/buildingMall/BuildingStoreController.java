@@ -65,8 +65,16 @@ public class BuildingStoreController extends MyController {
 		user.setNickname("刘欣星");
 		user.setHeadimgurl("http://wx.qlogo.cn/mmopen/PL5y7QQHZgJicBb9y5ibeyHIydlrccylPOqYK08icarePso7zyyedGumdHTvv5MjZsLVjibdunBqNhiaMYRO0J5KNmBBicJv9Ol3Fh/0");	
 		user.setSex(1);
-	    request.getSession().setAttribute(CommonVar.SESSION_WEIXIN, user);
 		
+		/********测试数据，获取用户的店铺信息**********/
+		BuildingStore query = new BuildingStore();
+		query.setMemberId(user.getId());
+		List<BuildingStore> list = buildingStoreServiceImpl.getStoreList(query,null);
+		if(list.size()>0) {			
+			request.getSession().setAttribute(CommonVar.SESSION_STORE,list.get(0));
+		}		
+	    request.getSession().setAttribute(CommonVar.SESSION_WEIXIN, user);
+	    
 		List<BuildingType> typeList = buildingStoreServiceImpl.getBuildingType();
 		model.addAttribute("typeList",typeList);
 		

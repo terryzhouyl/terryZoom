@@ -8,7 +8,7 @@ import com.terry.dao.support.Page;
 import com.terry.entity.BuildingCase;
 import com.terry.entity.BuildingGoods;
 
-public interface BuildingGoodsService {
+public interface BuildingGoodsService extends BaseService{
 
 	/**
 	 * 分页获取案例数据
@@ -54,4 +54,11 @@ public interface BuildingGoodsService {
 	 * 保存商品
 	 */
 	public void saveGoods( CommonsMultipartFile cmfile,BuildingGoods buildingGoods,Integer fsize);
+	
+	/**
+	 * 保存建材案例
+	 * @param description
+	 * @param imagePath
+	 */
+	public Integer saveBuildingCase(String description,String imagePath,Integer storeId);
 }

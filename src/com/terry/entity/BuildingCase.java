@@ -1,5 +1,6 @@
 package com.terry.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -31,7 +32,8 @@ public class BuildingCase{
 	private String description; //描述
 	private String pictureUrl; //封面图片路径	
 	private Integer status;	//(1.使用 0.删除)	
-	
+	private Date createTime; //创建时间
+		
 	@Transient
 	private List<String> caselist;
 	@Transient
@@ -80,6 +82,12 @@ public class BuildingCase{
 	}
 	public void setPictureUrl(String pictureUrl) {
 		this.pictureUrl = pictureUrl;
+	}	
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 	@Transient
 	public String getStorePic() {

@@ -15,6 +15,8 @@ public interface CommonVar {
 	/***session 用户 key **/
 	public static String SESSION_WEIXIN = "SESSION_WEIXIN";
 	
+	public static String SESSION_STORE = "SESSION_STORE";
+	
 	/***上传图片前缀****/
 	public static String IMG_PREFIX = "/resource/enjoylife";
 	

@@ -10,7 +10,7 @@ public class CasePic extends GenericEntity<Long>{
 	private String originalPicUrl;
 	private String phonePicUrl;
 	private String smallPicUrl;
-	private String ImageStatus;
+	private Integer ImageStatus;  //图片上传状态 1.云 0.本地
 	private Integer status;
 	private Date createTime;
 	
@@ -39,10 +39,10 @@ public class CasePic extends GenericEntity<Long>{
 	public void setSmallPicUrl(String smallPicUrl) {
 		this.smallPicUrl = smallPicUrl;
 	}
-	public String getImageStatus() {
+	public Integer getImageStatus() {
 		return ImageStatus;
 	}
-	public void setImageStatus(String imageStatus) {
+	public void setImageStatus(Integer imageStatus) {
 		ImageStatus = imageStatus;
 	}
 	public Integer getStatus() {

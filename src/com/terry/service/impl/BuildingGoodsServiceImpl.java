@@ -1,6 +1,7 @@
 package com.terry.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,22 +12,27 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.terry.CommonVar;
 import com.terry.dao.BuildingCaseDao;
 import com.terry.dao.BuildingGoodsDao;
+import com.terry.dao.CasePicDao;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingCase;
 import com.terry.entity.BuildingGoods;
 import com.terry.entity.BuildingStore;
+import com.terry.entity.CasePic;
 import com.terry.service.BuildingGoodsService;
 import com.terry.util.FileUtil;
 import com.terry.util.ImageUtil;
 
 @Service("buildingGoodsServiceImpl")
-public class BuildingGoodsServiceImpl implements BuildingGoodsService{
+public class BuildingGoodsServiceImpl extends BaseServiceImpl implements BuildingGoodsService{
 
 	@Resource(name="buildingCaseDaoImpl")
 	private BuildingCaseDao buildingCaseDaoImpl;
 	
 	@Resource(name="buildingGoodsDaoImpl")
 	private BuildingGoodsDao buildingGoodsDaoImpl;
+	
+	@Resource(name="casePicDaoImpl")
+	private CasePicDao casePicDaoImpl;
 	
 	private final String[] picArrayKey = new String[]{"originalPicUrl","phonePicUrl","cutPicUrl"};
 	
@@ -135,8 +141,8 @@ public class BuildingGoodsServiceImpl implements BuildingGoodsService{
 			oldCase.setStorePic(buildingCase.getStorePic());
 			buildingCaseDaoImpl.saveOrUpdate(oldCase);	
 		}
-	}
-
+	}	
+	
 	@Override
 	public void saveGoods(CommonsMultipartFile cmfile, BuildingGoods buildingGoods, Integer fsize) {
 		// TODO Auto-generated method stub	
@@ -155,5 +161,43 @@ public class BuildingGoodsServiceImpl implements BuildingGoodsService{
 			newGoods.setSmallPicUrl(smallPic);    						
 		}	
 		
+	}
+	
+	/**
+	 * 保存建材案例
+	 * @param description
+	 * @param imagePath
+	 */
+	public Integer saveBuildingCase(String description,String imagePath,Integer storeId) {
+		
+		BuildingCase buildingCase = new BuildingCase();
+		buildingCase.setDescription(description);
+		buildingCase.setStatus(1);
+		buildingCase.setStoreId(storeId);
+		buildingCase.setCreateTime(new Date());
+		BuildingCase newCase = buildingCaseDaoImpl.saveOrUpdate(buildingCase);
+		
+		String[] imageArray = imagePath.split(",");
+		List<CasePic> list = new ArrayList<>();
+		for(int i=0;i<imageArray.length;i++) {			
+			CasePic casePic = new CasePic();			
+			//原图
+			String path = imageArray[i];
+			//压缩图
+			String appResize = ImageUtil.appResize(path, true);
+			//剪裁图
+			String smallPic = ImageUtil.cutSmallPic(path);
+			
+			casePic.setCaseId(newCase.getId());
+			casePic.setImageStatus(1);
+			casePic.setCreateTime(new Date());
+			casePic.setOriginalPicUrl(path);
+			casePic.setPhonePicUrl(appResize);
+			casePic.setSmallPicUrl(smallPic);
+			casePic.setStatus(1); 
+			list.add(casePic);
+		}
+		casePicDaoImpl.batchSaveOrUpdate(list);
+		return newCase.getId();
 	}
 }
