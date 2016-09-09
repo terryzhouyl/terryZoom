@@ -24,9 +24,4 @@ public class BaseService{
 		return systemProperties.getProperties(key);
 	}
 	
-	
-	public BuildingStore getStoreInfo(HttpServletRequest request) {
-		WeixinUser wxuser =	(WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);		
-		return buildingStoreDaoImpl.getBy(BuildingStore.class,"memberId",wxuser.getId());
-	}
 }

@@ -25,7 +25,7 @@
 				<c:if test="${info.imgUrl != null && info.imgUrl !=''}">
 					<img id="preview" width="70" height="70" src="http://images.sunjoypai.com/store/${info.photoPath}160X160_${info.imgUrl}?rnd=<%=Math.random()%>" />
 				</c:if> --%>
-					<img id="preview" width="70" height="70" src="${imgPath}/${smallPicUrl}" onerror="javascript:this.src='${ctx}/resource/system/common/image/headPortrait.jpg" />								
+					<img id="preview" width="70" height="70" src="${imgPath}/${info.smallPicUrl}" onerror="javascript:this.src='${ctx}/resource/system/common/image/headPortrait.jpg" />								
 				</label>
 			</a>
 		</li>
@@ -43,22 +43,22 @@
 		</li>
 		<li>
 			<a href="${ctx}/phone/buildingMyCenter/storeInfoModify.htm?key=address">
-				<span>地址</span><label>${info.addr}&nbsp;</label>
+				<span>地址</span><label>${info.province}${info.city}${info.district}${info.detailAddress}&nbsp;</label>
 			</a>
 		</li>
 		<li>
 			<a href="${ctx}/phone/buildingMyCenter/storeInfoModify.htm?key=contactPhone">
-				<span>联系电话</span><label>${info.mobile}&nbsp;</label>
+				<span>联系电话</span><label>${info.contactPhone}&nbsp;</label>
 			</a>
 		</li>
 		<li>
 			<a href="${ctx}/phone/buildingMyCenter/storeInfoModify.htm?key=buinessTime">
-				<span>营业时间</span><label>${info.opening}&nbsp;</label>
+				<span>营业时间</span><label>${info.businessTime}&nbsp;</label>
 			</a>
 		</li>
 		<li>
 			<a href="${ctx}/phone/buildingMyCenter/storeInfoModify.htm?key=mainBusiness">
-				<span>主营</span><label>${info.major}&nbsp;</label>
+				<span>主营</span><label>${info.mainBusiness}&nbsp;</label>
 			</a>
 		</li>		
 	</ul>

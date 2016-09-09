@@ -32,6 +32,8 @@ public class BuildingGoodsService extends BaseService{
 	@Resource(name="casePicDaoImpl")
 	private CasePicDao casePicDaoImpl;
 	
+	
+	
 	private final String[] picArrayKey = new String[]{"originalPicUrl","phonePicUrl","cutPicUrl"};
 	
 	public Page<BuildingCase> getCasePage(BuildingCase caseQuery, Integer pageSize, Integer pageNum) {

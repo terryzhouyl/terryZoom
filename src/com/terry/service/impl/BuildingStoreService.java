@@ -1,13 +1,17 @@
 package com.terry.service.impl;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.validator.util.privilegedactions.GetDeclaredMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -24,7 +28,7 @@ import com.terry.entity.WeixinUser;
 import com.terry.util.ImageUtil;
 
 @Service("buildingStoreService")
-public class BuildingStoreService{
+public class BuildingStoreService {
 	
 	@Resource(name="buildingTypeDaoImpl")
 	private BuildingTypeDao buildingTypeDaoImpl;
@@ -164,6 +168,38 @@ public class BuildingStoreService{
 			newStore.setSmallPicUrl(smallPic);    
 		}
 		
+	}
+	
+	/**
+	 * 保存店铺信息
+	 * @param request
+	 * @throws Exception
+	 */
+	public String saveStoreInfo(HttpServletRequest request,BuildingStore buildingStore) throws Exception {
+		Enumeration<String> keys = request.getParameterNames();
+		String key = null;
+		while(keys.hasMoreElements()) {
+			key = keys.nextElement();
+		}
+		System.out.println(key);
+		String setMethodName = "set"+key.substring(0,1).toUpperCase()+key.substring(1);
+		
+		Method method =	buildingStore.getClass().getMethod(setMethodName,String.class);
+		method.invoke(buildingStore, request.getParameter(key));
+		
+		buildingStoreDaoImpl.saveOrUpdate(buildingStore);
+		
+		return key;		
+	}
+	
+	/**
+	 * 根据请求查询店铺信息
+	 * @param request
+	 * @return
+	 */
+	public BuildingStore getStoreInfo(HttpServletRequest request) {
+		WeixinUser wxuser =	(WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);		
+		return buildingStoreDaoImpl.getBy(BuildingStore.class,"memberId",wxuser.getId());
 	}
 	
 }

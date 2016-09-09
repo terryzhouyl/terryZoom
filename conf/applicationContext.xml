@@ -103,7 +103,7 @@
 	<!-- AOP配置元素 -->
 	<aop:config>
 		<!-- 配置切入点 -->
-		<aop:pointcut id="myPointcut"  expression="execution(* com.terry.service.*.*(..))" />
+		<aop:pointcut id="myPointcut"  expression="execution(* com.terry.service..*.*(..))" />
 		<!-- 指定在myPointcut切入点应用txAdvice事务增加处理 -->
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="myPointcut" />
 	</aop:config>

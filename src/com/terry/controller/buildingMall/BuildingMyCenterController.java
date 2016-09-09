@@ -38,7 +38,7 @@ public class BuildingMyCenterController extends MyController{
 	@RequestMapping("/myCenter")
 	public String myCenter(Model model,HttpServletRequest request){	
 		
-		BuildingStore store = buildingGoodsService.getStoreInfo(request);
+		BuildingStore store = buildingStoreService.getStoreInfo(request);
 		
 		model.addAttribute("buildingStore", store);
 		
@@ -69,7 +69,7 @@ public class BuildingMyCenterController extends MyController{
 	@RequestMapping("/storeConfigIndex")
 	public String storeConfigIndex(Model model,HttpServletRequest request,Long storeId){
 				
-		BuildingStore store = buildingGoodsService.getStoreInfo(request);
+		BuildingStore store = buildingStoreService.getStoreInfo(request);
 		model.addAttribute("info",store);	
 		return "/phone/buildingMyCenter/storeConfigIndex";
 	}
@@ -84,7 +84,7 @@ public class BuildingMyCenterController extends MyController{
 	@RequestMapping("/storeInfoModify")
 	public String modifyStoreInfo(Model model,HttpServletRequest request,String key){
 		
-		BuildingStore store = buildingGoodsService.getStoreInfo(request);
+		BuildingStore store = buildingStoreService.getStoreInfo(request);
 		model.addAttribute("info",store);
 		model.addAttribute("key",key);
 		return "/phone/buildingMyCenter/storeInfoModify";
@@ -124,10 +124,26 @@ public class BuildingMyCenterController extends MyController{
 	 * @return
 	 */
 	@RequestMapping("/saveStoreInfo")
-	public ResponseEntity<String> modifyStoreInfo(HttpServletRequest request,String key){ 
-		
-		
-		return null;
+	public ResponseEntity<String> modifyStoreInfo(HttpServletRequest request){ 
+		Boolean status = true;
+		String msg = "保存成功";
+		BuildingStore store = null;
+		String key = null;
+		try{			
+			store = buildingStoreService.getStoreInfo(request);
+			key = buildingStoreService.saveStoreInfo(request,store);
+		}
+		catch(Exception e){
+			status = false;
+			msg = "保存失败";
+			if(store!=null ) {
+				log.error("店铺"+store.getId()+"保存信息"+key+"失败");
+			}
+			else {
+				log.error("店铺保存信息"+key+"失败");
+			}
+		}
+		return renderMsg(status, msg); 
 	}
 	
 	/**
@@ -318,7 +334,7 @@ public class BuildingMyCenterController extends MyController{
 		boolean status = true;
 		String msg = "上传成功";
 		List<String> list = null;			
-		BuildingStore store = buildingGoodsService.getStoreInfo(request);
+		BuildingStore store = buildingStoreService.getStoreInfo(request);
 		if(store == null) {
 			msg = "对不起，您暂未申请店铺";
 			status = false;
@@ -349,7 +365,7 @@ public class BuildingMyCenterController extends MyController{
 		boolean status = true;
 		String msg = "保存案例成功";
 		Long caseId = null;	
-		BuildingStore store = buildingGoodsService.getStoreInfo(request);		
+		BuildingStore store = buildingStoreService.getStoreInfo(request);		
 		if(store == null) {
 			msg = "您暂未开启店铺，无法上传案例";
 			status = false;
