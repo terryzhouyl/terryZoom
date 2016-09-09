@@ -1,5 +1,5 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
-<%@ include file="/taglibs.jsp"%>
+<%@ include file="/WEB-INF/taglibs.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -9,7 +9,7 @@
 <link href="${ctx}/resource/system/phone/buildingMall/css/base.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/resource/system/phone/buildingMall/css/style.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/resource/system/common/css/common.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="${ctx}/resource/system/common/js/jquery-1.7.2.min.js" ></script>
+<script type="text/javascript" src="${ctx}/resource/system/common/js/jquery-1.10.1.min.js" ></script>
 <script type="text/javascript" src="${ctx}/resource/system/common/js/common.js"></script> 
 <script type="text/javascript" src="${ctx}/resource/system/phone/buildingMall/js/storeInfo.js"></script> 
 <script>

@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.terry.controller.MyController;
 import com.terry.entity.KeywordReply;
-import com.terry.service.KeywordReplyService;
+import com.terry.service.impl.KeywordReplyService;
 
 @Controller("adminKeywordReplyController")
 @RequestMapping(value = "/admin/replyKeyword")
 public class KeywordReplyController extends MyController{
 	
-	@Resource(name="keywordReplyServiceImpl")
-	KeywordReplyService keywordReplyServiceImpl;
+	@Resource(name="keywordReplyService")
+	KeywordReplyService keywordReplyService;
 	
 	@RequestMapping(value="/replyIndex")
 	public String index(Model model,HttpServletRequest request){
 		
-		List<KeywordReply> list = keywordReplyServiceImpl.queryReplyList();
+		List<KeywordReply> list = keywordReplyService.queryReplyList();
 		
 		model.addAttribute("keywordList",list);
 				
@@ -48,7 +48,7 @@ public class KeywordReplyController extends MyController{
 		}
 		else {			
 			try{
-				keywordReplyServiceImpl.saveReplyKeyword(keywordReply);
+				keywordReplyService.saveReplyKeyword(keywordReply);
 			}
 			catch(Exception e){
 				msg = "请求失败";
@@ -70,7 +70,7 @@ public class KeywordReplyController extends MyController{
 		}
 		else {			
 			try {
-				keywordReplyServiceImpl.savekey(id,keyword);
+				keywordReplyService.savekey(id,keyword);
 			}
 			catch(Exception e) {
 				msg = "请求失败";

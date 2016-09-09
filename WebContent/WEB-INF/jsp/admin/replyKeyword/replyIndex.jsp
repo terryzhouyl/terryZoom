@@ -1,6 +1,6 @@
 <%@ page language="java" errorPage="/error.jsp" pageEncoding="UTF-8"
 	contentType="text/html;charset=utf-8"%>
-<%@ include file="/taglibs.jsp"%>
+<%@ include file="/WEB-INF/taglibs.jsp"%>
 <link href="${ctx}/resource/system/weixin/css/weixin.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
 var mySound;

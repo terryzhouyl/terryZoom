@@ -10,5 +10,5 @@ public interface BuildingFocusDao extends BaseDao<BuildingFocus> {
 	
 	public List<BuildingFocus> queryFocusList(BuildingFocus buildingFocus);
 	
-	public Page<Map<String,Object>> queryFocusCasePage(Integer memberId,int pageNum,int pageSize);
+	public Page<Map<String,Object>> queryFocusCasePage(Long memberId,int pageNum,int pageSize);
 }

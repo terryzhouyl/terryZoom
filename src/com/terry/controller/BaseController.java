@@ -6,13 +6,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,12 +17,11 @@ import org.springframework.http.ResponseEntity;
 
 import com.terry.dao.support.Page;
 import com.terry.util.JacksonJsonUtil;
-import com.terry.util.SystemProperties;
 
 
 public class BaseController {
 	
-	public static Logger log = LoggerFactory.getLogger(BaseController.class);
+	public Logger log = Logger.getLogger(BaseController.class);
 
 	/**
 	 * 返回服务器地址 like http://192.168.1.1:8441/UUBean/

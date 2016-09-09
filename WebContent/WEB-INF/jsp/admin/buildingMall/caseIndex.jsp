@@ -1,5 +1,5 @@
 <%@ page language="java" errorPage="/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@ include file="/taglibs.jsp"%>
+<%@ include file="/WEB-INF/taglibs.jsp"%>
 <script type="text/javascript">
 	$(function(){
 		$("#buildingMallMenu").addClass("cur");

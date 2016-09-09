@@ -16,12 +16,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "el_weixin_user")
-public class WeixinUser extends GenericEntity<Integer>{
+public class WeixinUser extends GenericEntity<Long>{
 	
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	@Column(name = "id", unique = true, nullable = false)
-//	private Integer id;
 	//微信基础信息
     private String nickname;//呢称
     private String openid;//用户唯一标识 

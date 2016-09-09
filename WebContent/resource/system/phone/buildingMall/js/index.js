@@ -6,11 +6,15 @@
         
     var typeId = 1;
     
+    //添加底部菜单样式
+    $(function(){
+    	addFooterClass(0);
+    })	
+        
     //页面滚动执行事件
     $(window).scroll(function(){
         loadmore($(this));
-    });
-    
+    });   
     
     //加载更多
     function loadmore(obj){

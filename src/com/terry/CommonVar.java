@@ -23,5 +23,12 @@ public interface CommonVar {
 	/******成功与否标志********/
 	public static int SF_SUCCESS = 1;
 	public static int SF_FAILURE = 0;
-
+	
+	/******图片上传状态********/
+	public static int PICSTATUS_LOCAL = 1; //本地
+	public static int PICSTATUS_CLOUD = 2; //云
+	
+	/*******使用标志*************/
+	public static int USE_ONUSE = 1;
+	public static int USE_NOUSE = 0;
 }

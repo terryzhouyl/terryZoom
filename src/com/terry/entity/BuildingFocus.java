@@ -9,35 +9,28 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "el_building_focus")
-public class BuildingFocus {
+public class BuildingFocus extends GenericEntity<Long>{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Integer id;
-	private Integer memberId;
-	private Integer storeId;
+	private Long memberId;
+	private Long storeId;
 	private Date createTime;
 	
 		
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public Integer getMemberId() {
+	
+	public Long getMemberId() {
 		return memberId;
 	}
-	public void setMemberId(Integer memberId) {
+	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
 	}
-	public Integer getStoreId() {
+	public Long getStoreId() {
 		return storeId;
 	}
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(Long storeId) {
 		this.storeId = storeId;
 	}
 	public Date getCreateTime() {

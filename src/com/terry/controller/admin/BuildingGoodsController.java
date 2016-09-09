@@ -18,16 +18,15 @@ import com.terry.controller.MyController;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingCase;
 import com.terry.entity.BuildingGoods;
-import com.terry.entity.BuildingStore;
-import com.terry.service.BuildingGoodsService;
+import com.terry.service.impl.BuildingGoodsService;
 import com.terry.util.ImageUtil;
 
 @Controller("adminbuildingGoodsController")
 @RequestMapping("/admin/buildingGoods")
 public class BuildingGoodsController extends MyController{
 	
-	@Resource(name="buildingGoodsServiceImpl")
-	private BuildingGoodsService buildingGoodsServiceImpl;
+	@Resource(name="buildingGoodsService")
+	private BuildingGoodsService buildingGoodsService;
 	
 	/**
 	 * 商品列表页
@@ -39,7 +38,7 @@ public class BuildingGoodsController extends MyController{
 	@RequestMapping(value = "/goodsIndex")
 	public String goodsIndex(Model model,HttpServletRequest request,Integer pageNum,Integer pageSize,BuildingGoods goodsQuery){
 		
-		Page<BuildingGoods> page = buildingGoodsServiceImpl.getGoodsPage(goodsQuery, pageSize, pageNum);				
+		Page<BuildingGoods> page = buildingGoodsService.getGoodsPage(goodsQuery, pageSize, pageNum);				
 		model.addAttribute("page", page);
 		model.addAttribute("storeId",goodsQuery.getStoreId());
 		return "/admin/buildingMall/goodsIndex";
@@ -55,7 +54,7 @@ public class BuildingGoodsController extends MyController{
 	 */
 	@RequestMapping(value = "/caseIndex")
 	public String caseIndex(Model model,HttpServletRequest request,BuildingCase caseQuery,Integer pageSize,Integer pageNum){
-		Page<BuildingCase> page = buildingGoodsServiceImpl.getCasePage(caseQuery, pageSize, pageNum);
+		Page<BuildingCase> page = buildingGoodsService.getCasePage(caseQuery, pageSize, pageNum);
 		model.addAttribute("page", page);
 		model.addAttribute("storeId", caseQuery.getStoreId());
 		return "/admin/buildingMall/caseIndex";
@@ -69,9 +68,9 @@ public class BuildingGoodsController extends MyController{
 	 * @return
 	 */
 	@RequestMapping(value = "/editCase")
-	public String editCase(Model model,HttpServletRequest request,Integer buildingCaseId,Integer storeId){
+	public String editCase(Model model,HttpServletRequest request,Long buildingCaseId,Long storeId){
 		if(buildingCaseId != null){						
-			List<BuildingCase> list =	buildingGoodsServiceImpl.getCaseList(null, buildingCaseId);
+			List<BuildingCase> list =	buildingGoodsService.getCaseList(null, buildingCaseId);
 			BuildingCase buildingCase = null;
 			if(list.size() > 0) {
 				buildingCase = list.get(0);
@@ -133,7 +132,7 @@ public class BuildingGoodsController extends MyController{
 		}
 		else {
 			try{				
-				buildingGoodsServiceImpl.saveCase(buildingCase);			
+				buildingGoodsService.saveCase(buildingCase);			
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -154,9 +153,9 @@ public class BuildingGoodsController extends MyController{
 	 * @return
 	 */
 	@RequestMapping(value = "/editGoods")
-	public String editGoods(Model model,HttpServletRequest request,Integer goodsId,Integer storeId){
+	public String editGoods(Model model,HttpServletRequest request,Long goodsId,Long storeId){
 
-		List<BuildingGoods> list =	buildingGoodsServiceImpl.getGoodsList(null,goodsId);
+		List<BuildingGoods> list =	buildingGoodsService.getGoodsList(null,goodsId);
 		if(list.size() > 0) {
 			model.addAttribute("buildingGoods", list.get(0));
 		}
@@ -191,7 +190,7 @@ public class BuildingGoodsController extends MyController{
 		}	
 		if(success){
 			try{
-				buildingGoodsServiceImpl.saveGoods(cmfile,buildingGoods,fsize);				
+				buildingGoodsService.saveGoods(cmfile,buildingGoods,fsize);				
 			}
 			catch (Exception e) {
 				log.error("后台管理系统保存商品失败",e);
@@ -229,7 +228,7 @@ public class BuildingGoodsController extends MyController{
 		}			
 		if(success){
 			try{
-				buildingGoodsServiceImpl.saveGoods(null,buildingGoods,null);				
+				buildingGoodsService.saveGoods(null,buildingGoods,null);				
 			}
 			catch (Exception e) {
 				log.error("后台管理系统保存商品失败",e);

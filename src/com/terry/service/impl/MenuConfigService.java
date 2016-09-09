@@ -9,16 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.terry.dao.MenuConfigDao;
 import com.terry.entity.MenuConfig;
-import com.terry.service.MenuConfigService;
 
-@Service("menuConfigServiceImpl")
-public class MenuConfigServiceImpl implements MenuConfigService {
+@Service("menuConfigService")
+public class MenuConfigService {
 
 	@Resource(name="menuConfigDaoImpl")
 	MenuConfigDao menuConfigDaoImpl;
 	
 	
-	@Override
 	public List<MenuConfig> getMenuConfigList() {
 		// TODO Auto-generated method stub
 		MenuConfig menuConfigQuery = new MenuConfig();
@@ -37,7 +35,6 @@ public class MenuConfigServiceImpl implements MenuConfigService {
 	}
 
 
-	@Override
 	public void saveMenu(Integer id,String menuName,Integer parentId) {
 		// TODO Auto-generated method stub
 		MenuConfig menuConfig = null;
@@ -62,7 +59,6 @@ public class MenuConfigServiceImpl implements MenuConfigService {
 	}
 
 
-	@Override
 	public void saveMenuInfo(MenuConfig menuConfig) {
 		// TODO Auto-generated method stub
 		

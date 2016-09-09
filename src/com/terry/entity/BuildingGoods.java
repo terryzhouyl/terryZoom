@@ -13,15 +13,12 @@ import javax.persistence.Table;
  * @author Administrator
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "el_building_goods")
-public class BuildingGoods{
+public class BuildingGoods extends GenericEntity<Long>{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Integer id;
-	private Integer storeId; //商家id
+	private Long storeId; //商家id
 	private String smallPicUrl; //封面图片
 	private String goodsName; //商品名称
 	private Double goodsPrice; //商品价格
@@ -30,13 +27,6 @@ public class BuildingGoods{
 	private String originalPicUrl;	//上传图片路径
 	private String phonePicUrl;	//压缩图片
 	
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
 	public String getPhonePicUrl() {
 		return phonePicUrl;
 	}
@@ -49,10 +39,11 @@ public class BuildingGoods{
 	public void setOriginalPicUrl(String originalPicUrl) {
 		this.originalPicUrl = originalPicUrl;
 	}
-	public Integer getStoreId() {
+	
+	public Long getStoreId() {
 		return storeId;
 	}
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(Long storeId) {
 		this.storeId = storeId;
 	}
 	public Integer getPutAwayStatus() {

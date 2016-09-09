@@ -2,23 +2,29 @@ package com.terry.entity;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 
 @SuppressWarnings("serial")
+@Entity
+@Table(name = "el_case_pic")
 public class CasePic extends GenericEntity<Long>{	
 	
-	private Integer caseId;
+	private Long caseId;
 	private String originalPicUrl;
 	private String phonePicUrl;
 	private String smallPicUrl;
-	private Integer ImageStatus;  //图片上传状态 1.云 0.本地
+	private Integer imageStatus;  //图片上传状态 1.云 0.本地
 	private Integer status;
 	private Date createTime;
 	
 	
-	public Integer getCaseId() {
+	
+	public Long getCaseId() {
 		return caseId;
 	}
-	public void setCaseId(Integer caseId) {
+	public void setCaseId(Long caseId) {
 		this.caseId = caseId;
 	}
 	public String getOriginalPicUrl() {
@@ -39,11 +45,12 @@ public class CasePic extends GenericEntity<Long>{
 	public void setSmallPicUrl(String smallPicUrl) {
 		this.smallPicUrl = smallPicUrl;
 	}
+	
 	public Integer getImageStatus() {
-		return ImageStatus;
+		return imageStatus;
 	}
 	public void setImageStatus(Integer imageStatus) {
-		ImageStatus = imageStatus;
+		this.imageStatus = imageStatus;
 	}
 	public Integer getStatus() {
 		return status;

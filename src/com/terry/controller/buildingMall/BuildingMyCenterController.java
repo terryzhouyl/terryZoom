@@ -13,20 +13,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import com.terry.BusinessException;
-import com.terry.CommonVar;
 import com.terry.controller.MyController;
 import com.terry.entity.BuildingStore;
-import com.terry.entity.WeixinUser;
-import com.terry.service.BuildingGoodsService;
+import com.terry.service.impl.BuildingGoodsService;
+import com.terry.service.impl.BuildingStoreService;
 import com.terry.util.ImageUtil;
 
 @Controller("phoneBuildingMyCenterController")
 @RequestMapping(value = "phone/buildingMyCenter")
 public class BuildingMyCenterController extends MyController{
 	
-	@Resource(name="buildingGoodsServiceImpl")
-	BuildingGoodsService buildingGoodsServiceImpl;
+	@Resource(name="buildingGoodsService")
+	BuildingGoodsService buildingGoodsService;
+	
+	@Resource(name="buildingStoreService")
+	BuildingStoreService buildingStoreService;
 	
 	/**
 	 * 1.进入个人中心
@@ -37,7 +38,10 @@ public class BuildingMyCenterController extends MyController{
 	@RequestMapping("/myCenter")
 	public String myCenter(Model model,HttpServletRequest request){	
 		
-						
+		BuildingStore store = buildingGoodsService.getStoreInfo(request);
+		
+		model.addAttribute("buildingStore", store);
+		
 		return "/phone/buildingMyCenter/myCenter";	
 	}
 	
@@ -51,6 +55,7 @@ public class BuildingMyCenterController extends MyController{
 	@RequestMapping("/deleteGoods")
 	public ResponseEntity<String> deleteGoods(Long goodsId,Integer operation){
 		
+	
 		return null;
 	}
 	
@@ -62,9 +67,10 @@ public class BuildingMyCenterController extends MyController{
 	 * @return
 	 */
 	@RequestMapping("/storeConfigIndex")
-	public String storeConfigIndex(Model model,HttpServletRequest request,Long buildingStoreId){
-		
-		
+	public String storeConfigIndex(Model model,HttpServletRequest request,Long storeId){
+				
+		BuildingStore store = buildingGoodsService.getStoreInfo(request);
+		model.addAttribute("info",store);	
 		return "/phone/buildingMyCenter/storeConfigIndex";
 	}
 	
@@ -72,12 +78,17 @@ public class BuildingMyCenterController extends MyController{
 	 * 3.1 跳转到店铺设置 具体信息修改页
 	 * @param model
 	 * @param request
-	 * @param title
+	 * @param key 修改的键
 	 * @return
 	 */
-	@RequestMapping("/modifyStoreInfo")
-	public String modifyStoreInfo(Model model,HttpServletRequest request,String title,Long buildingStoreId,String key){
-		return null;
+	@RequestMapping("/storeInfoModify")
+	public String modifyStoreInfo(Model model,HttpServletRequest request,String key){
+		
+		BuildingStore store = buildingGoodsService.getStoreInfo(request);
+		model.addAttribute("info",store);
+		model.addAttribute("key",key);
+		return "/phone/buildingMyCenter/storeInfoModify";
+		
 	}
 	
 	/**
@@ -113,9 +124,8 @@ public class BuildingMyCenterController extends MyController{
 	 * @return
 	 */
 	@RequestMapping("/saveStoreInfo")
-	public ResponseEntity<String> modifyStoreInfo(String coverPictureUrl,String title,String promotion,String province,
-			String city,String district,String address,String contactPhone,String businessTime,Long storeId,
-			Long buildingTypeId,String buildingTypeName,String mainBusiness,Integer cityId){ 
+	public ResponseEntity<String> modifyStoreInfo(HttpServletRequest request,String key){ 
+		
 		
 		return null;
 	}
@@ -126,7 +136,7 @@ public class BuildingMyCenterController extends MyController{
 	 * @param model
 	 * @param modifyValue
 	 * @return
-	 */
+	 */	
 	@RequestMapping("/modifyBuildingType")
 	public String modifyBuildingType(HttpServletRequest request,Model model,Long buildingStoreId) {				
 		
@@ -308,7 +318,7 @@ public class BuildingMyCenterController extends MyController{
 		boolean status = true;
 		String msg = "上传成功";
 		List<String> list = null;			
-		BuildingStore store = buildingGoodsServiceImpl.getStoreInfo(request);
+		BuildingStore store = buildingGoodsService.getStoreInfo(request);
 		if(store == null) {
 			msg = "对不起，您暂未申请店铺";
 			status = false;
@@ -334,27 +344,28 @@ public class BuildingMyCenterController extends MyController{
 	 * @return
 	 */
 	@RequestMapping("/saveCase")
-	public ResponseEntity<String> saveCase(String description,String imagePath,Integer storeId){ 
+	public ResponseEntity<String> saveCase(String description,String imagePath,HttpServletRequest request){ 
 		
 		boolean status = true;
 		String msg = "保存案例成功";
-		Integer caseId = null;
-		if(storeId == null) {
+		Long caseId = null;	
+		BuildingStore store = buildingGoodsService.getStoreInfo(request);		
+		if(store == null) {
 			msg = "您暂未开启店铺，无法上传案例";
 			status = false;
-		}
+		}		
 		else {			
 			try{			
-				caseId = buildingGoodsServiceImpl.saveBuildingCase(description, imagePath,storeId);
+				caseId = buildingGoodsService.saveBuildingCase(description, imagePath,store.getId());
 			}
 			catch(Exception e) {
 				status = false;
 				msg = "保存案例失败";
 				if(caseId == null) {				
-					log.error("店铺"+storeId+"保存案例失败",e);
+					log.error("店铺"+store.getId()+"保存案例失败",e);
 				}
 				else {
-					log.error("店铺"+storeId+"保存案例"+caseId+"失败",e);
+					log.error("店铺"+store.getId()+"保存案例"+caseId+"失败",e);
 				}
 			}				
 		}

@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingStore;
 import com.terry.entity.BuildingType;
-import com.terry.service.impl.BuildingStoreServiceImpl;
+import com.terry.service.impl.BuildingStoreService;
 import com.terry.test.BaseTest;
 
 /**
@@ -26,7 +26,7 @@ import com.terry.test.BaseTest;
 public class BuildingMallTest extends BaseTest{
 	
 	@Resource(name="buildingStoreServiceImpl")
-	BuildingStoreServiceImpl buildingStoreServiceImpl;
+	BuildingStoreService buildingStoreServiceImpl;
 	
 	/**
 	 * 获取建材类型列表

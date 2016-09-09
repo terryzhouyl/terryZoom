@@ -10,18 +10,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.terry.entity.MenuConfig;
-import com.terry.service.MenuConfigService;
+import com.terry.service.impl.MenuConfigService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
 public class ReplyTest {
 
-	@Resource(name="menuConfigServiceImpl")
-	MenuConfigService menuConfigServiceImpl;
+	@Resource(name="menuConfigService")
+	MenuConfigService menuConfigService;
 	
 	@Test
 	public void testGetMenu() {
-		List<MenuConfig> list =	menuConfigServiceImpl.getMenuConfigList();
+		List<MenuConfig> list =	menuConfigService.getMenuConfigList();
 		for(int i=0;i<list.size();i++) {
 			List<MenuConfig> subList = list.get(i).getListChildren();
 			System.out.println(list.get(i).getMenuName());

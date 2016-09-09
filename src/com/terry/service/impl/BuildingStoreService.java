@@ -13,24 +13,18 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.terry.BusinessException;
 import com.terry.CommonVar;
-import com.terry.dao.BuildingCaseDao;
 import com.terry.dao.BuildingFocusDao;
-import com.terry.dao.BuildingGoodsDao;
 import com.terry.dao.BuildingStoreDao;
 import com.terry.dao.BuildingTypeDao;
 import com.terry.dao.support.Page;
-import com.terry.entity.BuildingCase;
 import com.terry.entity.BuildingFocus;
-import com.terry.entity.BuildingGoods;
 import com.terry.entity.BuildingStore;
 import com.terry.entity.BuildingType;
 import com.terry.entity.WeixinUser;
-import com.terry.service.BuildingStoreService;
-import com.terry.util.FileUtil;
 import com.terry.util.ImageUtil;
 
-@Service("buildingStoreServiceImpl")
-public class BuildingStoreServiceImpl implements BuildingStoreService {
+@Service("buildingStoreService")
+public class BuildingStoreService{
 	
 	@Resource(name="buildingTypeDaoImpl")
 	private BuildingTypeDao buildingTypeDaoImpl;
@@ -41,19 +35,16 @@ public class BuildingStoreServiceImpl implements BuildingStoreService {
 	@Resource(name="buildingFocusDaoImpl")
 	private BuildingFocusDao buildingFocusDaoImpl;
 	
-	@Override
 	public int weixinLogin(HttpServletRequest request, String code) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public List<BuildingType> getBuildingType() {
 		// TODO Auto-generated method stub
 		return buildingTypeDaoImpl.findAll(BuildingType.class);
 	}
 
-	@Override
 	public Page<BuildingStore> getStorePage(Integer pageSize, Integer pageNum,BuildingStore query) {
 		// TODO Auto-generated method stub
 		if(pageSize == null) {
@@ -67,8 +58,7 @@ public class BuildingStoreServiceImpl implements BuildingStoreService {
 		
 	}
 
-	@Override
-	public BuildingStore storeInfo(HttpServletRequest request,Integer storeId) {
+	public BuildingStore storeInfo(HttpServletRequest request,Long storeId) {
 		// TODO Auto-generated method stub
 	    		
 		BuildingStore buildingStore =	buildingStoreDaoImpl.get(BuildingStore.class,storeId);
@@ -91,7 +81,6 @@ public class BuildingStoreServiceImpl implements BuildingStoreService {
 		return buildingStore;
 	}
 
-	@Override
 	public Page<Map<String, Object>> getFocusList(HttpServletRequest request, Integer pageSize, Integer pageNum) {
 		// TODO Auto-generated method stub
 		 WeixinUser user = (WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);
@@ -112,8 +101,7 @@ public class BuildingStoreServiceImpl implements BuildingStoreService {
 		return page;
 	}
 
-	@Override
-	public void focusStore(HttpServletRequest request, Integer userId, Integer storeId) {
+	public void focusStore(HttpServletRequest request, Long userId, Long storeId) {
 		// TODO Auto-generated method stub
 		BuildingFocus query = new BuildingFocus();
 		query.setMemberId(userId);
@@ -140,8 +128,7 @@ public class BuildingStoreServiceImpl implements BuildingStoreService {
 
 
 
-	@Override
-	public List<BuildingStore> getStoreList(BuildingStore goodsQuery, Integer storeId) {
+	public List<BuildingStore> getStoreList(BuildingStore goodsQuery, Long storeId) {
 		// TODO Auto-generated method stub
 		List<BuildingStore> list = null;
 		if(storeId !=null) {
@@ -155,7 +142,6 @@ public class BuildingStoreServiceImpl implements BuildingStoreService {
 		return list;
 	}
 
-	@Override
 	public void saveOrUpdateStoreInfo(BuildingStore buildingStore,CommonsMultipartFile cmfile,Integer fsize) {
 		// TODO Auto-generated method stub
 		//buildingStore.setBuildingTypeName(buildingTypeService.get(buildingStore.getBuildingTypeId()).getTypeName());

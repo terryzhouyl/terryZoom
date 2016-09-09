@@ -14,14 +14,11 @@ import javax.persistence.Transient;
  * @author Administrator
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "el_building_store")
-public class BuildingStore{
+public class BuildingStore extends GenericEntity<Long>{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Integer id;
 	private String title; //标题
 	private String content; //内容
 	private String mainBusiness; //主营业务
@@ -33,7 +30,7 @@ public class BuildingStore{
 	private String contactPhone; //联系电话
 	private String businessTime; //营业时间
 	private String description; //描述
-	private Integer memberId; //用户Id
+	private Long memberId; //用户Id
 	private String coverPictureUrl; //店铺封面图片
 	private Integer buildingTypeId; //建材类别id
 	private String buildingTypeName; //建材类别名称
@@ -50,12 +47,6 @@ public class BuildingStore{
 	}
 	public void setImageStatus(Integer imageStatus) {
 		this.imageStatus = imageStatus;
-	}
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
 	}
 	public Integer getCityId() {
 		return cityId;
@@ -153,10 +144,11 @@ public class BuildingStore{
 	public void setProvince(String province) {
 		this.province = province;
 	}
-	public Integer getMemberId() {
+	
+	public Long getMemberId() {
 		return memberId;
 	}
-	public void setMemberId(Integer memberId) {
+	public void setMemberId(Long memberId) {
 		this.memberId = memberId;
 	}
 	public Integer getBuildingTypeId() {

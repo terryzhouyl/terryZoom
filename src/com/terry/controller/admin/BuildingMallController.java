@@ -21,7 +21,7 @@ import com.terry.controller.MyController;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingStore;
 import com.terry.entity.BuildingType;
-import com.terry.service.BuildingStoreService;
+import com.terry.service.impl.BuildingStoreService;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -31,16 +31,8 @@ import net.sf.json.JSONObject;
 public class BuildingMallController extends MyController{
 	
 	@Autowired
-	BuildingStoreService buildingStoreServiceImpl;
+	BuildingStoreService buildingStoreService;
 	
-//	@Autowired
-//	BuildingTypeService buildingTypeService;
-//	
-//	@Autowired
-//	BuildingGoodsService buildingGoodsService;
-//	
-//	@Autowired	
-//	BuildingCaseService buildingCaseService;
 		
 	/**
 	 * 建材商铺列表 /admin/building/index.htm
@@ -51,7 +43,7 @@ public class BuildingMallController extends MyController{
 	 */
 	@RequestMapping(value = "/index")
 	public String index(Model model,HttpServletRequest request, BuildingStore query,Integer pageNum,Integer pageSize){
-		Page<BuildingStore> page = buildingStoreServiceImpl.getStorePage(pageSize, pageNum, query);	
+		Page<BuildingStore> page = buildingStoreService.getStorePage(pageSize, pageNum, query);	
 		
 	//	page.setHref("admin/buildingMall/index.htm");
 		model.addAttribute("page", page);
@@ -61,14 +53,14 @@ public class BuildingMallController extends MyController{
 	}
 	
 	@RequestMapping(value = "/editStore")
-	public String edit(Model model,HttpServletRequest request,Integer storeId){
+	public String edit(Model model,HttpServletRequest request,Long storeId){
 		if(storeId != null){			
-			List<BuildingStore> list = buildingStoreServiceImpl.getStoreList(null, storeId);
+			List<BuildingStore> list = buildingStoreService.getStoreList(null, storeId);
 			if(list.size()>0) {
 				model.addAttribute("buildingStore",list.get(0));
 			}
 		}		
-		List<BuildingType> buildingTypeList = buildingStoreServiceImpl.getBuildingType();
+		List<BuildingType> buildingTypeList = buildingStoreService.getBuildingType();
 		model.addAttribute("buildingTypeList", buildingTypeList);
 		return "/admin/buildingMall/editStore";
 	} 
@@ -132,7 +124,7 @@ public class BuildingMallController extends MyController{
 		String msg = result[1];
 		if(success){
 			try{
-				buildingStoreServiceImpl.saveOrUpdateStoreInfo(buildingStore,cmfile,fsize);				
+				buildingStoreService.saveOrUpdateStoreInfo(buildingStore,cmfile,fsize);				
 			}
 			catch (Exception e) {
 				log.error("后台管理系统保存店铺失败",e);
@@ -160,7 +152,7 @@ public class BuildingMallController extends MyController{
 		String msg = result[1];
 		if(success){
 			try{
-				buildingStoreServiceImpl.saveOrUpdateStoreInfo(buildingStore,null,null);				
+				buildingStoreService.saveOrUpdateStoreInfo(buildingStore,null,null);				
 			}
 			catch (Exception e) {
 				log.error("后台管理系统保存店铺失败",e);

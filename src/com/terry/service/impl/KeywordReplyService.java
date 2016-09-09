@@ -9,17 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.terry.dao.KeywordReplyDao;
 import com.terry.entity.KeywordReply;
-import com.terry.service.KeywordReplyService;
 
-import javassist.compiler.ast.Keyword;
 
-@Service("keywordReplyServiceImpl")
-public class KeywordReplyServiceImpl implements KeywordReplyService{
+@Service("keywordReplyService")
+public class KeywordReplyService{
 
 	@Resource(name="keywordReplyDaoImpl")
 	KeywordReplyDao keywordReplyDaoImpl;
 	
-	@Override
 	public List<KeywordReply> queryReplyList() {
 		// TODO Auto-generated method stub
 		
@@ -28,7 +25,6 @@ public class KeywordReplyServiceImpl implements KeywordReplyService{
 		return list;
 	}
 
-	@Override
 	public void saveReplyKeyword(KeywordReply keywordReply) {
 		// TODO Auto-generated method stub
 		
@@ -48,7 +44,6 @@ public class KeywordReplyServiceImpl implements KeywordReplyService{
 		}						
 	}
 
-	@Override
 	public void savekey(Integer id,String keyword) {
 		// TODO Auto-generated method stub
 		if(id == null) {

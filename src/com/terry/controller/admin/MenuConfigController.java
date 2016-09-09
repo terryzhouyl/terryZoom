@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.terry.controller.MyController;
 import com.terry.entity.MenuConfig;
-import com.terry.service.MenuConfigService;
+import com.terry.service.impl.MenuConfigService;
 
 @Controller("adminMenuConfigController")
 @RequestMapping("/admin/customMenu")
 public class MenuConfigController extends MyController{
 	
-	@Resource(name="menuConfigServiceImpl")
-	MenuConfigService menuConfigServiceImpl;		
+	@Resource(name="menuConfigService")
+	MenuConfigService menuConfigService;		
 	
 	@RequestMapping(value="/menuIndex")
 	public String index(Model model,HttpServletRequest request){
 		
 
-		List<MenuConfig> list =	menuConfigServiceImpl.getMenuConfigList();	
+		List<MenuConfig> list =	menuConfigService.getMenuConfigList();	
 		model.addAttribute("listCustomMenu", list);
 		return "/admin/customMenu/menuIndex";
 	}
@@ -46,7 +46,7 @@ public class MenuConfigController extends MyController{
 		}
 		else {			
 			try{
-				menuConfigServiceImpl.saveMenu(id,menuName,parentId);
+				menuConfigService.saveMenu(id,menuName,parentId);
 			}
 			catch(Exception e){
 				msg = "保存失败";
@@ -90,7 +90,7 @@ public class MenuConfigController extends MyController{
 		}
 		else {			
 			try{
-				menuConfigServiceImpl.saveMenuInfo(menuConfig);
+				menuConfigService.saveMenuInfo(menuConfig);
 			}
 			catch(Exception e){
 				msg = "保存失败";

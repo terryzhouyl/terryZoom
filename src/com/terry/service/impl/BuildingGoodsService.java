@@ -16,14 +16,12 @@ import com.terry.dao.CasePicDao;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingCase;
 import com.terry.entity.BuildingGoods;
-import com.terry.entity.BuildingStore;
 import com.terry.entity.CasePic;
-import com.terry.service.BuildingGoodsService;
 import com.terry.util.FileUtil;
 import com.terry.util.ImageUtil;
 
-@Service("buildingGoodsServiceImpl")
-public class BuildingGoodsServiceImpl extends BaseServiceImpl implements BuildingGoodsService{
+@Service("buildingGoodsService")
+public class BuildingGoodsService extends BaseService{
 
 	@Resource(name="buildingCaseDaoImpl")
 	private BuildingCaseDao buildingCaseDaoImpl;
@@ -36,7 +34,6 @@ public class BuildingGoodsServiceImpl extends BaseServiceImpl implements Buildin
 	
 	private final String[] picArrayKey = new String[]{"originalPicUrl","phonePicUrl","cutPicUrl"};
 	
-	@Override
 	public Page<BuildingCase> getCasePage(BuildingCase caseQuery, Integer pageSize, Integer pageNum) {
 		// TODO Auto-generated method stub
 		if(caseQuery.getStatus() == null) {
@@ -53,7 +50,6 @@ public class BuildingGoodsServiceImpl extends BaseServiceImpl implements Buildin
 		return page;
 	}
 
-	@Override
 	public Page<BuildingGoods> getGoodsPage(BuildingGoods goodsQuery, Integer pageSize, Integer pageNum) {
 		// TODO Auto-generated method stub
 		if(goodsQuery.getPutAwayStatus() == null) {
@@ -69,8 +65,7 @@ public class BuildingGoodsServiceImpl extends BaseServiceImpl implements Buildin
 		
 	}
 
-	@Override
-	public List<BuildingGoods> getGoodsList(BuildingGoods goodsQuery, Integer buildingGoodsId) {
+	public List<BuildingGoods> getGoodsList(BuildingGoods goodsQuery, Long buildingGoodsId) {
 		// TODO Auto-generated method stub
 		
 		List<BuildingGoods> list = null;
@@ -85,8 +80,7 @@ public class BuildingGoodsServiceImpl extends BaseServiceImpl implements Buildin
 		return list;
 	}
 
-	@Override
-	public List<BuildingCase> getCaseList(BuildingCase caseQuery, Integer buildingCaseId) {
+	public List<BuildingCase> getCaseList(BuildingCase caseQuery, Long buildingCaseId) {
 		// TODO Auto-generated method stub
 		List<BuildingCase> list = null;
 		if(buildingCaseId !=null) {
@@ -143,7 +137,6 @@ public class BuildingGoodsServiceImpl extends BaseServiceImpl implements Buildin
 		}
 	}	
 	
-	@Override
 	public void saveGoods(CommonsMultipartFile cmfile, BuildingGoods buildingGoods, Integer fsize) {
 		// TODO Auto-generated method stub	
 		BuildingGoods newGoods = buildingGoodsDaoImpl.saveOrUpdate(buildingGoods); 
@@ -168,11 +161,11 @@ public class BuildingGoodsServiceImpl extends BaseServiceImpl implements Buildin
 	 * @param description
 	 * @param imagePath
 	 */
-	public Integer saveBuildingCase(String description,String imagePath,Integer storeId) {
+	public Long saveBuildingCase(String description,String imagePath,Long storeId) {
 		
 		BuildingCase buildingCase = new BuildingCase();
 		buildingCase.setDescription(description);
-		buildingCase.setStatus(1);
+		buildingCase.setStatus(CommonVar.USE_ONUSE);
 		buildingCase.setStoreId(storeId);
 		buildingCase.setCreateTime(new Date());
 		BuildingCase newCase = buildingCaseDaoImpl.saveOrUpdate(buildingCase);
@@ -189,12 +182,12 @@ public class BuildingGoodsServiceImpl extends BaseServiceImpl implements Buildin
 			String smallPic = ImageUtil.cutSmallPic(path);
 			
 			casePic.setCaseId(newCase.getId());
-			casePic.setImageStatus(1);
+			casePic.setImageStatus(CommonVar.PICSTATUS_LOCAL);
 			casePic.setCreateTime(new Date());
 			casePic.setOriginalPicUrl(path);
 			casePic.setPhonePicUrl(appResize);
 			casePic.setSmallPicUrl(smallPic);
-			casePic.setStatus(1); 
+			casePic.setStatus(CommonVar.USE_ONUSE);
 			list.add(casePic);
 		}
 		casePicDaoImpl.batchSaveOrUpdate(list);

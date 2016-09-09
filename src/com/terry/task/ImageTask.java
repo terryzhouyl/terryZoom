@@ -52,10 +52,10 @@ public class ImageTask {
 			
 			if(uploadPicToCloud(phoneImage,result)
 					&&(uploadPicToCloud(smallImage,result))){
-				buildingStore.setImageStatus(1);  //全部上传成功
+				buildingStore.setImageStatus(CommonVar.PICSTATUS_CLOUD);  //全部上传成功
 			}
 			else {
-				buildingStore.setImageStatus(0); //未上传成功
+				buildingStore.setImageStatus(CommonVar.PICSTATUS_LOCAL); //未上传成功
 			}
 		}
 		logger.info("********上传店铺图片至七牛云结束，本应上传图片"+result[0]+"张,成功"+result[1]+"张,失败"+result[2]+"张********");

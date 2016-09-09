@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.terry.controller.MyController;
 import com.terry.entity.City;
 import com.terry.entity.Province;
-import com.terry.service.CityService;
-import com.terry.service.ProvinceService;
+import com.terry.service.impl.CityService;
+import com.terry.service.impl.ProvinceService;
 
 @Controller("commonController")
 @RequestMapping(value = "/common")
 public class CommonController extends MyController{
 	
-	@Resource(name="cityServiceImpl")
-	CityService cityServiceImpl;
+	@Resource(name="cityService")
+	CityService cityService;
 	
-	@Resource(name="provinceServiceImpl")
-	ProvinceService provinceServiceImpl;
+	@Resource(name="provinceService")
+	ProvinceService provinceService;
 	
 	@RequestMapping("/getCities")
 	public ResponseEntity<String> getCities (Integer provinceId) {
@@ -31,7 +31,7 @@ public class CommonController extends MyController{
 		boolean status = true;
 		List<City> list = null; 
 		try{
-			list = cityServiceImpl.queryAll(provinceId);
+			list = cityService.queryAll(provinceId);
 		}
 		catch(Exception e){			
 			status = false;
@@ -48,7 +48,7 @@ public class CommonController extends MyController{
 		boolean status = true;
 		List<Province> list = null; 
 		try{
-			list = provinceServiceImpl.queryAll();
+			list = provinceService.queryAll();
 		}
 		catch(Exception e){			
 			status = false;

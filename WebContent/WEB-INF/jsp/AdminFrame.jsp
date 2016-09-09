@@ -1,5 +1,5 @@
 ﻿<%@ page language="java" errorPage="/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8"%>
-<%@ include file="/taglibs.jsp"%>
+<%@ include file="/WEB-INF/taglibs.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +15,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" href="${ctx}/resource/system/admin/css/elusive-webfont.css" />
 	<link rel="stylesheet" href="${ctx}/resource/system/admin/css/style.css" />
-	<script src="${ctx}/resource/system/common/js/jquery-1.7.2.js" type="text/javascript"></script>
+	<script src="${ctx}/resource/system/common/js/jquery-1.10.1.min.js" type="text/javascript"></script>
 	<script src="${ctx}/resource/system/admin/js/funUtils.js"></script>
 	<script src="${ctx}/resource/system/admin/js/public.js"></script>
 	<!--[if lte IE 7]><link rel="stylesheet" src="${ctx}/resource/system/admin/css/elusive-webfont-ie7.css" /><![endif]-->

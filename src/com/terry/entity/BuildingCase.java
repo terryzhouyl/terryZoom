@@ -17,15 +17,12 @@ import javax.persistence.Transient;
  * @author Administrator
  *
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "el_building_case")
-public class BuildingCase{
+public class BuildingCase extends GenericEntity<Long>{
  
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Integer id;
-	private Integer storeId; //店铺id
+	private Long storeId; //店铺id
 	@Transient
 	private String storePic; //店铺图片
 	private String title; //标题
@@ -33,7 +30,13 @@ public class BuildingCase{
 	private String pictureUrl; //封面图片路径	
 	private Integer status;	//(1.使用 0.删除)	
 	private Date createTime; //创建时间
-		
+			
+	public Long getStoreId() {
+		return storeId;
+	}
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
+	}
 	@Transient
 	private List<String> caselist;
 	@Transient
@@ -45,13 +48,6 @@ public class BuildingCase{
 		this.caselist = caselist;
 	}
 	
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
 	public Integer getStatus() {
 		return status;
 	}
@@ -59,12 +55,6 @@ public class BuildingCase{
 		this.status = status;
 	}
 	
-	public Integer getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(Integer storeId) {
-		this.storeId = storeId;
-	}
 	public String getTitle() {
 		return title;
 	}

@@ -27,7 +27,7 @@ public class BuildingFocusDaoImpl extends BaseDaoImpl<BuildingFocus> implements 
 		return this.query(BuildingFocus.class, rule);
 	};
 	
-	public Page<Map<String,Object>> queryFocusCasePage(Integer memberId,int pageNum,int pageSize) {
+	public Page<Map<String,Object>> queryFocusCasePage(Long memberId,int pageNum,int pageSize) {
 		String sql = "SELECT bc.id,bc.storeId,bc.title,bc.description,bc.pictureUrl,bc.status,bs.coverPictureUrl as storePic,bs.title as storeTitle FROM "
 				+ "el_building_case bc,el_building_store bs ,el_building_focus bf WHERE bf.storeId = bs.id AND bs.id = bc.storeId AND bf.memberId=:memberId order by bc.id desc ";
 		String countSql = "select count(1) from el_building_case bc,el_building_store bs ,el_building_focus bf WHERE bf.storeId = bs.id AND bs.id = bc.storeId AND bf.memberId=:memberId";

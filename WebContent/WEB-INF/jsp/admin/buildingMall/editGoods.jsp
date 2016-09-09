@@ -1,5 +1,5 @@
 <%@ page language="java" errorPage="/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8"%>
-<%@ include file="/taglibs.jsp"%>
+<%@ include file="/WEB-INF/taglibs.jsp"%>
 <script type="text/javascript" src="${ctx}/resource/system/common/js/ajaxfileupload.js"></script>
 <script type="text/javascript">
 $(function(){

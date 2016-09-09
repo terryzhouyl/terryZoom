@@ -22,19 +22,19 @@ import com.terry.entity.BuildingGoods;
 import com.terry.entity.BuildingStore;
 import com.terry.entity.BuildingType;
 import com.terry.entity.WeixinUser;
-import com.terry.service.BuildingGoodsService;
-import com.terry.service.BuildingStoreService;
+import com.terry.service.impl.BuildingGoodsService;
+import com.terry.service.impl.BuildingStoreService;
 
 @Controller("phoneBuildingMallController")
 @RequestMapping(value = "phone/buildingMall")
 public class BuildingStoreController extends MyController {
-	
-	@Resource(name="buildingStoreServiceImpl")
-	BuildingStoreService buildingStoreServiceImpl;
 		
-	@Resource(name="buildingGoodsServiceImpl")
-	BuildingGoodsService buildingGoodsServiceImpl;
-	
+	@Resource(name="buildingStoreService")
+	BuildingStoreService buildingStoreService;
+		
+	@Resource(name="buildingGoodsService")
+	BuildingGoodsService buildingGoodsService;
+			
 	/****
 	 * 异步加载 路径命名都以 动词开头  并且每个catch中必须都得 打印错误日志
 	 * 跳转页面 路径命名都是 名词
@@ -61,21 +61,18 @@ public class BuildingStoreController extends MyController {
 		
 		/********测试数据，模拟用户登录的入口**********/
 		WeixinUser user = new WeixinUser();
-		user.setId(1);
+		user.setId(1L);
 		user.setNickname("刘欣星");
 		user.setHeadimgurl("http://wx.qlogo.cn/mmopen/PL5y7QQHZgJicBb9y5ibeyHIydlrccylPOqYK08icarePso7zyyedGumdHTvv5MjZsLVjibdunBqNhiaMYRO0J5KNmBBicJv9Ol3Fh/0");	
 		user.setSex(1);
 		
-		/********测试数据，获取用户的店铺信息**********/
-		BuildingStore query = new BuildingStore();
-		query.setMemberId(user.getId());
-		List<BuildingStore> list = buildingStoreServiceImpl.getStoreList(query,null);
-		if(list.size()>0) {			
-			request.getSession().setAttribute(CommonVar.SESSION_STORE,list.get(0));
-		}		
+		/********测试数据，获取用户的店铺信息**********/	
 	    request.getSession().setAttribute(CommonVar.SESSION_WEIXIN, user);
 	    
-		List<BuildingType> typeList = buildingStoreServiceImpl.getBuildingType();
+	    
+	    log.info(user.getNickname()+"登录了系统");
+	    
+		List<BuildingType> typeList = buildingStoreService.getBuildingType();
 		model.addAttribute("typeList",typeList);
 		
 		return "phone/buildingMall/index";
@@ -97,7 +94,7 @@ public class BuildingStoreController extends MyController {
 		}		
 		else {			
 			try{
-				page = buildingStoreServiceImpl.getStorePage(pageSize, pageNum, buildingStore);					
+				page = buildingStoreService.getStorePage(pageSize, pageNum, buildingStore);					
 			}catch(Exception e){
 				status = false;
 				msg = "请求失败";
@@ -116,10 +113,10 @@ public class BuildingStoreController extends MyController {
 	 * @return
 	 */
 	@RequestMapping(value="/storeInfo")
-	public String storeInfo(Model model,HttpServletRequest request,Integer storeId) {
+	public String storeInfo(Model model,HttpServletRequest request,Long storeId) {
 				
 		if(storeId != null) {			
-			BuildingStore storeInfo = buildingStoreServiceImpl.storeInfo(request, storeId);
+			BuildingStore storeInfo = buildingStoreService.storeInfo(request, storeId);
 			model.addAttribute("info",storeInfo);
 		} 		
 		return "phone/buildingMall/storeInfo";
@@ -134,7 +131,7 @@ public class BuildingStoreController extends MyController {
 	 * @return
 	 */
 	@RequestMapping(value="/getStoreCaseOrGoods")
-	public ResponseEntity<String> getStoreCaseOrGoods(Integer type,Integer storeId,Integer pageNum,Integer pageSize){ 
+	public ResponseEntity<String> getStoreCaseOrGoods(Integer type,Long storeId,Integer pageNum,Integer pageSize){ 
 		
 		Boolean status = true;
 		String msg = "请求成功";
@@ -150,12 +147,12 @@ public class BuildingStoreController extends MyController {
 				if(type == 1) {
 					BuildingCase caseQuery = new BuildingCase();
 					caseQuery.setStoreId(storeId);
-					casePage = buildingGoodsServiceImpl.getCasePage(caseQuery, pageSize, pageNum);
+					casePage = buildingGoodsService.getCasePage(caseQuery, pageSize, pageNum);
 				}
 				else {
 					BuildingGoods goodsQuery = new BuildingGoods();
 					goodsQuery.setStoreId(storeId);
-					goodsPage = buildingGoodsServiceImpl.getGoodsPage(goodsQuery, pageSize, pageNum);
+					goodsPage = buildingGoodsService.getGoodsPage(goodsQuery, pageSize, pageNum);
 				}
 			}
 			catch(Exception e){
@@ -204,7 +201,7 @@ public class BuildingStoreController extends MyController {
 		
 		Page<Map<String,Object>> page = null;	
 		try{
-			page = buildingStoreServiceImpl.getFocusList(request, pageSize, pageNum);
+			page = buildingStoreService.getFocusList(request, pageSize, pageNum);
 		}
 		catch(Exception e){
 			status = false;
@@ -223,7 +220,7 @@ public class BuildingStoreController extends MyController {
 	 * @return
 	 */
 	@RequestMapping("/focusStore")
-	public ResponseEntity<String> focusStore(HttpServletRequest request,Integer storeId){
+	public ResponseEntity<String> focusStore(HttpServletRequest request,Long storeId){
 		
 		Boolean status = true;
 		String msg = "关注成功";
@@ -238,7 +235,7 @@ public class BuildingStoreController extends MyController {
 			msg = "请关注我们的公众号";
 		}
 		try {
-			buildingStoreServiceImpl.focusStore(request, user.getId(), storeId);
+			buildingStoreService.focusStore(request, user.getId(), storeId);
 		}
 		catch(BusinessException e) {
 			status = false;
