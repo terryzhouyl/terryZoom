@@ -21,7 +21,9 @@ if(sUserAgent.toLowerCase().match(/android/i) == "android"){
 	<a href="javascript:checkError()"/> 错误详情 </a>
 	<div id = "errorContent" style="display:none">
 	<%
-		exception.printStackTrace(new java.io.PrintWriter(out));
+		if(exception!=null){
+			exception.printStackTrace(new java.io.PrintWriter(out));
+		}
 	%>
 	</div>
 </body>
