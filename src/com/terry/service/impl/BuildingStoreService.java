@@ -184,7 +184,7 @@ public class BuildingStoreService {
 		System.out.println(key);
 		String setMethodName = "set"+key.substring(0,1).toUpperCase()+key.substring(1);
 		
-		Method method =	buildingStore.getClass().getMethod(setMethodName,String.class);
+		Method method =	buildingStore.getClass().getMethod(setMethodName,String.class); 
 		method.invoke(buildingStore, request.getParameter(key));
 		
 		buildingStoreDaoImpl.saveOrUpdate(buildingStore);

@@ -52,7 +52,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="${ctx}/phone/buildingMyCenter/storeInfoModify.htm?key=buinessTime">
+			<a href="${ctx}/phone/buildingMyCenter/storeInfoModify.htm?key=businessTime">
 				<span>营业时间</span><label>${info.businessTime}&nbsp;</label>
 			</a>
 		</li>
