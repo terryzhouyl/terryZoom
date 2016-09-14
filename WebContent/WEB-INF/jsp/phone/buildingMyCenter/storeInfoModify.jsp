@@ -1,16 +1,13 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ include file="/WEB-INF/taglibs.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1.0,maximum-scale=1.0 ,user-scalable=no"/>
 <title>修改店铺信息</title>
-<link href="${pageContext.request.contextPath}/css/base.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js" ></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/amazeui.min.js" ></script>
+<link href="${ctx}/resource/system/phone/buildingMall/css/base.css" rel="stylesheet" type="text/css" />
+<link href="${ctx}/resource/system/phone/buildingMall/css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
 	 function doSubmit(){	    	
    		//$('#validateForm').submit();
@@ -49,19 +46,19 @@
 	<div class="storeName">
 		<ul>
 			<li>
-				<c:if test="${key == title}">
+				<c:if test="${key == 'title'}">
 					<span>店铺名称：<input type="text" class="main" name="storeName" id="title" value = "${info.title}" /></span><i class="iconfont" onclick="doClear('title')">&#xe60c;</i>
 				</c:if>	
-				<c:if test="${key == promotion}">
+				<c:if test="${key == 'promotion'}">
 					<span>促销信息：<input type="text" class="main" name="promotion" id="promotion" value = "${info.promotion}" /></span><i class="iconfont" onclick="doClear('promotion')">&#xe60c;</i>
 				</c:if>	
-				<c:if test="${key == contactPhone}">
+				<c:if test="${key == 'contactPhone'}">
 					<span>联系电话：<input type="text" class="main" name="contactPhone" id="contactPhone" value = "${info.contactPhone}" /></span><i class="iconfont" onclick="doClear('contactPhone')">&#xe60c;</i>
 				</c:if>		
-				<c:if test="${key == businessTime}">
+				<c:if test="${key == 'businessTime'}">
 					<span>营业时间：<input type="text" class="main" name="businessTime" id="businessTime" value = "${info.businessTime}" /></span><i class="iconfont" onclick="doClear('businessTime')">&#xe60c;</i>
 				</c:if>			
-				<c:if test="${key == mainBusiness}">
+				<c:if test="${key == 'mainBusiness'}">
 					<span>主营：<input type="text" class="main" name="mainBusiness" id="mainBusiness" value = "${info.mainBusiness}" /></span><i class="iconfont" onclick="doClear('mainBusiness')">&#xe60c;</i>
 				</c:if>																			
 			</li>

@@ -8,6 +8,8 @@
 <!-- 上下文 -->
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="imgPath" value="http://localhost:8888/enjoylife" />
+<script type="text/javascript" src="${ctx}/resource/system/common/js/jquery-1.10.1.min.js" ></script>
+<script src="${ctx}/resource/module/layer/layer.js"></script>
 <script>
 	var ctx = '${ctx}';
 	var imgPath = '${imgPath}';

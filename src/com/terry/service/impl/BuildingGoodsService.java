@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -17,6 +18,7 @@ import com.terry.dao.support.Page;
 import com.terry.entity.BuildingCase;
 import com.terry.entity.BuildingGoods;
 import com.terry.entity.CasePic;
+import com.terry.entity.specialbean.UploadFile;
 import com.terry.util.FileUtil;
 import com.terry.util.ImageUtil;
 
@@ -32,9 +34,6 @@ public class BuildingGoodsService extends BaseService{
 	@Resource(name="casePicDaoImpl")
 	private CasePicDao casePicDaoImpl;
 	
-	
-	
-	private final String[] picArrayKey = new String[]{"originalPicUrl","phonePicUrl","cutPicUrl"};
 	
 	public Page<BuildingCase> getCasePage(BuildingCase caseQuery, Integer pageSize, Integer pageNum) {
 		// TODO Auto-generated method stub
@@ -99,44 +98,31 @@ public class BuildingGoodsService extends BaseService{
 	
 	public void saveCase(BuildingCase buildingCase) {
 		String pictureUrl = buildingCase.getPictureUrl();
-		String picJson = null;		
 		if(buildingCase.getId()==null){
 			//增加
-			String[] picArray = pictureUrl.split(",");
-			for(int i=0;i<picArray.length;i++){
-				String appPicUrl =  ImageUtil.appResize(picArray[i], true);
-				String cutPicUrl = 	ImageUtil.cutPicToSquare(picArray[i]);				
-				picJson = FileUtil.addPicture(picJson,picArrayKey,new String[]{picArray[i],appPicUrl,cutPicUrl});
-			}	
-			buildingCase.setPictureUrl(picJson);
-			buildingCase.setStatus(1);
-			buildingCaseDaoImpl.saveOrUpdate(buildingCase);	
+			saveBuildingCase(buildingCase.getDescription(),pictureUrl,buildingCase.getStoreId());
 		}
 		else{
 			//更新
-			BuildingCase oldCase = buildingCaseDaoImpl.get(BuildingCase.class,buildingCase.getId());
-			String oldCasePic = oldCase.getPictureUrl();
-			picJson = oldCase.getPictureUrl();
+			StringBuilder builder = new StringBuilder();
 			String[] picArray = pictureUrl.split(",");
-			for(int i=0;i<picArray.length;i++){
-				if(oldCasePic.indexOf(picArray[i])>-1){
-					//已经存在
+			
+			CasePic query = new CasePic();
+			for(int i=0;i<picArray.length;i++) {
+				String fileName = picArray[i].substring(picArray[i].indexOf("/")+1);
+				query.setOriginalPicUrl(fileName);
+				List<CasePic> caseList =	casePicDaoImpl.queryList(query);
+				if(caseList!=null && caseList.size() > 0) { //数据库中已经存在无需添加
 					continue;
 				}
-				else{
-					String appPicUrl =  ImageUtil.appResize(picArray[i], true);
-					String cutPicUrl = 	ImageUtil.cutPicToSquare(picArray[i]);
-					picJson = FileUtil.addPicture(picJson,picArrayKey,new String[]{picArray[i],appPicUrl,cutPicUrl});
-				}
-			}
-			oldCase.setPictureUrl(picJson);
-			oldCase.setDescription(buildingCase.getDescription());
-			oldCase.setStoreId(buildingCase.getStoreId());
-			oldCase.setStatus(buildingCase.getStatus());
-			oldCase.setTitle(buildingCase.getTitle());
-			oldCase.setStorePic(buildingCase.getStorePic());
-			buildingCaseDaoImpl.saveOrUpdate(oldCase);	
-		}
+				else {
+					builder.append(picArray[i]);
+					builder.append(",");
+				}				
+			}		
+			builder.deleteCharAt(builder.length()-1);
+			saveBuildingCase(buildingCase.getDescription(),builder.toString(),buildingCase.getStoreId());			
+		}		
 	}	
 	
 	public void saveGoods(CommonsMultipartFile cmfile, BuildingGoods buildingGoods, Integer fsize) {
@@ -144,16 +130,20 @@ public class BuildingGoodsService extends BaseService{
 		BuildingGoods newGoods = buildingGoodsDaoImpl.saveOrUpdate(buildingGoods); 
 		
 		if(cmfile != null) { //上传图片
+			
+			String filePath = getConfig("goodsImgFile");
+			
 			//加入对图片的处理
 			//上传原图
-			String path = ImageUtil.uploadPicture(cmfile, fsize,"store/"+newGoods.getStoreId());
+			UploadFile originalFile = ImageUtil.uploadPicture(cmfile, fsize,filePath);									
 			//压缩图
-			String appResize = ImageUtil.appResize(path,true);
+			UploadFile appFile = ImageUtil.appResize(originalFile.getRealPath(),true);
 			//剪裁图
-			String smallPic = ImageUtil.cutSmallPic(path);						 
-			newGoods.setOriginalPicUrl(path);		
-			newGoods.setPhonePicUrl(appResize);
-			newGoods.setSmallPicUrl(smallPic);    						
+			UploadFile smallFile = ImageUtil.cutSmallPic(originalFile.getRealPath());						 
+			newGoods.setOriginalPicUrl(originalFile.getFileName());		
+			newGoods.setPhonePicUrl(appFile.getFileName());
+			newGoods.setSmallPicUrl(smallFile.getFileName());
+			newGoods.setImageFile(filePath);
 		}	
 		
 	}
@@ -179,20 +169,46 @@ public class BuildingGoodsService extends BaseService{
 			//原图
 			String path = imageArray[i];
 			//压缩图
-			String appResize = ImageUtil.appResize(path, true);
+			UploadFile appFile = ImageUtil.appResize(path, true);
 			//剪裁图
-			String smallPic = ImageUtil.cutSmallPic(path);
+			UploadFile smallFile = ImageUtil.cutSmallPic(path);
 			
 			casePic.setCaseId(newCase.getId());
 			casePic.setImageStatus(CommonVar.PICSTATUS_LOCAL);
 			casePic.setCreateTime(new Date());
-			casePic.setOriginalPicUrl(path);
-			casePic.setPhonePicUrl(appResize);
-			casePic.setSmallPicUrl(smallPic);
+			casePic.setOriginalPicUrl(new UploadFile(path).getFileName());
+			casePic.setPhonePicUrl(appFile.getFileName());
+			casePic.setSmallPicUrl(smallFile.getFileName());
 			casePic.setStatus(CommonVar.USE_ONUSE);
+			casePic.setImageFile(appFile.getFilePath());
 			list.add(casePic);
 		}
 		casePicDaoImpl.batchSaveOrUpdate(list);
 		return newCase.getId();
+	}
+	
+	/**
+	 * 商品上下线
+	 * @param goodsId
+	 */
+	public void putAwayGoods(Long goodsId) {
+		BuildingGoods goods = buildingGoodsDaoImpl.get(BuildingGoods.class, goodsId);
+		if(goods.getPutAwayStatus() == 1) { //商品下线
+			goods.setPutAwayStatus(0);
+		}
+		else { //商品上线
+			goods.setPutAwayStatus(1);
+		}
+		buildingGoodsDaoImpl.saveOrUpdate(goods);
+	}
+	
+	/**
+	 * 删除商品
+	 * @param goodsId
+	 */
+	public void deleteGoods(Long goodsId) {
+		BuildingGoods goods = buildingGoodsDaoImpl.get(BuildingGoods.class, goodsId);
+		goods.setStatus(CommonVar.USE_NOUSE);
+		buildingGoodsDaoImpl.saveOrUpdate(goods);
 	}
 }

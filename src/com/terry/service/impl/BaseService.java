@@ -13,9 +13,6 @@ public class BaseService{
 	
 	@Resource(name="systemProperties")
 	private SystemProperties systemProperties;
-	
-	@Resource(name="buildingStoreDaoImpl")
-	private BuildingStoreDao buildingStoreDaoImpl; 
 
 	/**
 	 * 获得配置文件内容

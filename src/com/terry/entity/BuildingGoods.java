@@ -23,9 +23,12 @@ public class BuildingGoods extends GenericEntity<Long>{
 	private String goodsName; //商品名称
 	private Double goodsPrice; //商品价格
 	private String unit; //单位
+	private String description; //描述
 	private Integer putAwayStatus; //1:上架   0:下架
 	private String originalPicUrl;	//上传图片路径
 	private String phonePicUrl;	//压缩图片
+	private String imageFile; //图片路径
+	private Integer status;
 	
 	public String getPhonePicUrl() {
 		return phonePicUrl;
@@ -53,6 +56,12 @@ public class BuildingGoods extends GenericEntity<Long>{
 		this.putAwayStatus = putAwayStatus;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	public String getSmallPicUrl() {
 		return smallPicUrl;
 	}
@@ -64,12 +73,18 @@ public class BuildingGoods extends GenericEntity<Long>{
 	}
 	public void setGoodsName(String goodsName) {
 		this.goodsName = goodsName;
-	}
+	}	
 	public Double getGoodsPrice() {
 		return goodsPrice;
 	}
 	public void setGoodsPrice(Double goodsPrice) {
 		this.goodsPrice = goodsPrice;
+	}
+	public String getImageFile() {
+		return imageFile;
+	}
+	public void setImageFile(String imageFile) {
+		this.imageFile = imageFile;
 	}
 	public String getUnit() {
 		return unit;
@@ -77,5 +92,12 @@ public class BuildingGoods extends GenericEntity<Long>{
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	
 	
 }

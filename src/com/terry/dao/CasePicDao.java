@@ -7,4 +7,5 @@ import com.terry.entity.CasePic;
 public interface CasePicDao extends BaseDao<CasePic>{
 
 	public List<CasePic> queryList(CasePic query);
+	
 }

@@ -23,9 +23,15 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.terry.BusinessException;
 import com.terry.CommonVar;
+import com.terry.entity.specialbean.UploadFile;
 
 import net.coobird.thumbnailator.Thumbnails;
 
+/**
+ * 图片上传类 返回的图片路径一概皆为相对路径，即去掉项目路径前缀的相对路径
+ * @author Administrator
+ *
+ */
 public class ImageUtil {
 
 	/**
@@ -35,13 +41,14 @@ public class ImageUtil {
 	 * @param fileFolder  ../../.. 形式，首位不需要"/"
 	 * @return
 	 */
-	public static List<String> uploadMutiPicture(CommonsMultipartFile[] cmfiles, Integer fsize,String fileFolder) {
+	public static List<UploadFile> uploadMutiPicture(CommonsMultipartFile[] cmfiles, Integer fsize,String fileFolder) {
 		
 		//StringBuilder filePath = new StringBuilder();				
-		List<String> picList = new ArrayList<>();
+		List<UploadFile> picList = new ArrayList<>();
 		for(CommonsMultipartFile cmfile:cmfiles){			
 			//filePath.append(uploadPicture(cmfile,fsize,fileFolder));
 			//filePath.append(",");
+			
 			picList.add(uploadPicture(cmfile,fsize,fileFolder));
 		}
 		return picList;
@@ -54,7 +61,7 @@ public class ImageUtil {
 	 * @param fsize 文件大小
 	 * @param fileFolder 文件路径  ../../.. 形式，首位不需要"/"
 	 */
-	public static String uploadPicture(CommonsMultipartFile cmfile, Integer fsize,String fileFolder){
+	public static UploadFile uploadPicture(CommonsMultipartFile cmfile, Integer fsize,String fileFolder){
 		Integer filesize = fsize;
 		if (fsize != null) {
 			filesize = filesize * 1024 * 1024;
@@ -88,7 +95,7 @@ public class ImageUtil {
 						file.createNewFile();
 					}
 					cmfile.getFileItem().write(file);
-					return	newPath;
+					return	new UploadFile(fileFolder,file.getName());
 				} else {
 					throw new BusinessException("文件大小不能超过" + fsize + "M");
 				}
@@ -106,7 +113,7 @@ public class ImageUtil {
 	 * @param fileFolder
 	 * @return
 	 */
-	public static String cutPicToSquare(String srcFile) {
+	public static UploadFile cutPicToSquare(String srcFile) {
 	 	FileInputStream is = null;  
         ImageInputStream iis = null;  
         
@@ -158,9 +165,11 @@ public class ImageUtil {
   
             //保存新图片
             String newPath = srcFile.substring(0,srcFile.lastIndexOf("/"));	            	            
-            String filePath = newPath+"/cut_"+FileUtil.newFileName(file.getName());	          
+           // String filePath = newPath+"/cut_"+FileUtil.newFileName(file.getName());
+            
+            String filePath = newPath+"/cut_"+file.getName();            
             ImageIO.write(bi, ext, new File(CommonVar.IMG_PREFIX+"/"+filePath)); 
-            return filePath;	            
+            return new UploadFile(newPath,"cut_"+file.getName());	            
         } catch (Exception e) {  
             e.printStackTrace();  
         } finally {  
@@ -254,17 +263,19 @@ public class ImageUtil {
 	 * @param originalPicUrl : 源图片路径,短文件路径 本项目中 /resource/enjoylife/后面的图片路径
 	 * @return
 	 */
-	public static String appResize(String originalPicUrl,Boolean isVertical) {
+	public static UploadFile appResize(String originalPicUrl,Boolean isVertical) {
 		// 网站缩略图默认宽度1024, app640
 		int w = 640;
 		String suoPath = null;
+		UploadFile uploadFile = null;
 		try {
 			File sourcefile = new File(CommonVar.IMG_PREFIX+"/"+originalPicUrl);
 			BufferedImage bi = ImageIO.read(new FileInputStream(sourcefile));
 			int width = bi.getWidth();
 			
 			if (width > w || !isVertical) {
-				suoPath = originalPicUrl.substring(0,originalPicUrl.lastIndexOf("/"))+"/phone_"+FileUtil.newFileName(sourcefile.getName());
+				//suoPath = originalPicUrl.substring(0,originalPicUrl.lastIndexOf("/"))+"/phone_"+FileUtil.newFileName(sourcefile.getName());
+				suoPath = originalPicUrl.substring(0,originalPicUrl.lastIndexOf("/"))+"/phone_"+sourcefile.getName();
 //				suoPath = new Uploader(request).getFolder("upload/phone") + "/"
 //						+ FileUtil.newFileName(sourcefile.getName());
 				BufferedImage srcImage = ImageIO.read(sourcefile);																																								
@@ -294,10 +305,11 @@ public class ImageUtil {
 				// 缩略图和原图一致
 				suoPath = originalPicUrl;
 			}
+			new UploadFile(suoPath);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return suoPath;
+		return uploadFile;
 	}		
 	
 	
@@ -350,30 +362,32 @@ public class ImageUtil {
 	 * 剪裁缩放成正方形小图片  使用thumnail开源工具
 	 * @return
 	 */
-	public static String cutSmallPic(String originalPicUrl) {
+	public static UploadFile cutSmallPic(String originalPicUrl) {
 		//先将图片剪裁成正方形
-		String cutPic =	cutPicToSquare(originalPicUrl);
+		//String cutPic =	cutPicToSquare(originalPicUrl);
+		UploadFile uploadFile =	cutPicToSquare(originalPicUrl);
+		
 		//再将正方形缩放		
-		String cutSmallPicPath = originalPicUrl.substring(0,originalPicUrl.lastIndexOf("/"))+"/smallPic_"+FileUtil.newFileName(cutPic);
+		//String cutSmallPicPath = originalPicUrl.substring(0,originalPicUrl.lastIndexOf("/"))+"/smallPic_"+FileUtil.newFileName(cutPic);
+		String cutSmallPicPath = uploadFile.getFilePath()+"/smallPic_"+uploadFile.getFileName();		
 		try {
-			Thumbnails.of(CommonVar.IMG_PREFIX+"/"+cutPic)
+			Thumbnails.of(CommonVar.IMG_PREFIX+"/"+uploadFile.getRealPath())
 					 .size(160, 160)
 					 .toFile(CommonVar.IMG_PREFIX+"/"+cutSmallPicPath);
 			//刪除掉剪裁的大圖
-			File file = new File(CommonVar.IMG_PREFIX+"/"+cutPic);
+			File file = new File(CommonVar.IMG_PREFIX+"/"+uploadFile.getRealPath());
 			file.delete();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return cutSmallPicPath;
+		return new UploadFile(cutSmallPicPath);
 	}
 	
-	
 	public static void main(String[] args) {
-		String path = appResize("store/12/684741451.jpg",true);
+		//String path = appResize("store/12/684741451.jpg",true);
 		
 		//String path = cutSmallPic("store/12/147263455451632.jpg");
-		System.out.println(path);
+		//System.out.println(path);
 	}
 }

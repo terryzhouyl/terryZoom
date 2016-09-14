@@ -31,6 +31,7 @@ public class BuildingStore extends GenericEntity<Long>{
 	private String businessTime; //营业时间
 	private String description; //描述
 	private Long memberId; //用户Id
+	private String imageFile; //文件路径
 	private String coverPictureUrl; //店铺封面图片
 	private Integer buildingTypeId; //建材类别id
 	private String buildingTypeName; //建材类别名称
@@ -42,6 +43,15 @@ public class BuildingStore extends GenericEntity<Long>{
 	private Integer isFocus; //是否关注
 	private Integer imageStatus; //是否上传至七牛云 1.是 2.否	
 	
+	
+	
+	
+	public String getImageFile() {
+		return imageFile;
+	}
+	public void setImageFile(String imageFile) {
+		this.imageFile = imageFile;
+	}
 	public Integer getImageStatus() {
 		return imageStatus;
 	}

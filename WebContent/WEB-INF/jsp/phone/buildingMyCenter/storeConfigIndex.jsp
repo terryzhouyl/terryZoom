@@ -9,6 +9,7 @@
 <link href="${ctx}/resource/system/phone/buildingMall/css/base.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/resource/system/phone/buildingMall/css/style.css" rel="stylesheet" type="text/css" />
 
+
 </head>
 
 
@@ -16,7 +17,7 @@
 <div class="setUp">
 	<ul>
 		<li>
-			<a href="${ctx}/store/settingStorePic">
+			<a href="${ctx}/phone/buildingMyCenter/storeHeadPage.htm?buildingStoreId=${info.id}">
 				<span>店铺头图</span>
 				<label>
 <%-- 				<c:if test="${info.imgUrl == null || info.imgUrl ==''}">
@@ -42,8 +43,8 @@
 			</a>
 		</li>
 		<li>
-			<a href="${ctx}/phone/buildingMyCenter/storeInfoModify.htm?key=address">
-				<span>地址</span><label>${info.province}${info.city}${info.district}${info.detailAddress}&nbsp;</label>
+			<a href="${ctx}/phone/buildingMyCenter/storeAddressModify.htm">
+				<span>地址</span><label>${info.province}${info.city}${info.detailAddress}&nbsp;</label>
 			</a>
 		</li>
 		<li>

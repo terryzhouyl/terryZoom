@@ -110,7 +110,7 @@ public class BuildingMallController extends MyController{
 	}
 	
 	/**
-	 * 保存商家信息
+	 * 保存商家信息("有图片上传")
 	 * @param model
 	 * @param request
 	 * @param buildingStore

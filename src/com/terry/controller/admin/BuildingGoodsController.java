@@ -18,6 +18,7 @@ import com.terry.controller.MyController;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingCase;
 import com.terry.entity.BuildingGoods;
+import com.terry.entity.specialbean.UploadFile;
 import com.terry.service.impl.BuildingGoodsService;
 import com.terry.util.ImageUtil;
 
@@ -88,7 +89,7 @@ public class BuildingGoodsController extends MyController{
 	public ResponseEntity<String> uploadCasePic(@RequestParam("cmfile") CommonsMultipartFile[] cmfiles, Integer fsize,String fileFolder,Integer storeId) {
 		boolean status = true;
 		String msg = "上传成功";
-		List<String> list = null;
+		List<UploadFile> list = null;
 		try{
 			String path = "store/"+storeId;
 			list =	ImageUtil.uploadMutiPicture(cmfiles,null,path);

@@ -18,7 +18,7 @@ public class CasePic extends GenericEntity<Long>{
 	private Integer imageStatus;  //图片上传状态 1.云 0.本地
 	private Integer status;
 	private Date createTime;
-	
+	private String imageFile;
 	
 	
 	public Long getCaseId() {
@@ -63,6 +63,12 @@ public class CasePic extends GenericEntity<Long>{
 	}
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+	public String getImageFile() {
+		return imageFile;
+	}
+	public void setImageFile(String imageFile) {
+		this.imageFile = imageFile;
 	}
 	
 	

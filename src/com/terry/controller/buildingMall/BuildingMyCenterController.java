@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,13 +15,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.terry.controller.MyController;
+import com.terry.dao.support.Page;
+import com.terry.entity.BuildingGoods;
 import com.terry.entity.BuildingStore;
+import com.terry.entity.specialbean.UploadFile;
 import com.terry.service.impl.BuildingGoodsService;
 import com.terry.service.impl.BuildingStoreService;
 import com.terry.util.ImageUtil;
 
 @Controller("phoneBuildingMyCenterController")
-@RequestMapping(value = "phone/buildingMyCenter")
+@RequestMapping(value = "/phone/buildingMyCenter")
 public class BuildingMyCenterController extends MyController{
 	
 	@Resource(name="buildingGoodsService")
@@ -28,6 +32,7 @@ public class BuildingMyCenterController extends MyController{
 	
 	@Resource(name="buildingStoreService")
 	BuildingStoreService buildingStoreService;
+	
 	
 	/**
 	 * 1.进入个人中心
@@ -43,20 +48,6 @@ public class BuildingMyCenterController extends MyController{
 		model.addAttribute("buildingStore", store);
 		
 		return "/phone/buildingMyCenter/myCenter";	
-	}
-	
-	
-	/**
-	 * 2.商品管理
-	 * @param goodsId	商品id
-	 * @param operation	操作代码，1：删除  2：上架  3：下架
-	 * @return
-	 */
-	@RequestMapping("/deleteGoods")
-	public ResponseEntity<String> deleteGoods(Long goodsId,Integer operation){
-		
-	
-		return null;
 	}
 	
 	/**
@@ -99,23 +90,80 @@ public class BuildingMyCenterController extends MyController{
 	 * @param buildingStoreId
 	 * @return
 	 */
-	@RequestMapping("/modifyAddressInfo")
+	@RequestMapping("/storeAddressModify")
 	public String modifyAddressInfo(Model model,HttpServletRequest request,String title,Long buildingStoreId){ 
-		return null;
+		
+		BuildingStore store = buildingStoreService.getStoreInfo(request);
+		model.addAttribute("buildingStore",store);
+		
+		return "/phone/buildingMyCenter/storeAddressModify";
 	}
 	
 	/**
-	 * 3.3 店铺设置 上传店铺头图
+	 * 3.2.2 跳转到店铺设置 商铺地址修改页面
 	 * @param model
 	 * @param request
 	 * @param title
 	 * @param buildingStoreId
 	 * @return
 	 */
-	@RequestMapping("/storeHeadImage")
-	public String uploadStoreHeadImage(Model model,HttpServletRequest request,Long buildingStoreId){
-		return null;
+	@RequestMapping("/saveAddressInfo")
+	public ResponseEntity<String> modifyAddressInfo(Model model,HttpServletRequest request,Integer cityId,String city,String province,String detailAddress){ 
+		Boolean status = true;
+		String msg = "保存成功";			
+		if(cityId == null) {
+			status = false;
+			msg = "请选择城市";
+		}
+		else if(StringUtils.isBlank(province)) {
+			status = false;
+			msg = "请输入省份";
+		}
+		else if(StringUtils.isBlank(detailAddress)) {
+			status = false;
+			msg = "请输入详细地址";
+		}
+		else {
+			
+			try {
+				buildingStoreService.saveStoreAddress(request,cityId, city, province, detailAddress);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				status = false;
+				msg = "保存失败";
+				BuildingStore store = buildingStoreService.getStoreInfo(request);
+				if(store!=null){					
+					log.error("保存店铺:"+store.getId()+",保存失败",e);
+				}
+				else {
+					log.error("保存店铺,保存失败",e);
+				}
+				e.printStackTrace();
+			}
+		}								
+		return renderMsg(status, msg); 
 	}
+	
+	/**
+	 * 3.3 店铺设置 跳转到上传店铺头图
+	 * @param model
+	 * @param request
+	 * @param title
+	 * @param buildingStoreId
+	 * @return
+	 */
+	@RequestMapping("/storeHeadPage")
+	public String uploadStoreHeadImage(Model model,HttpServletRequest request,Long buildingStoreId){
+		
+		BuildingStore buildingStore = buildingStoreService.getStoreInfo(request);		
+		model.addAttribute("coverPictureUrl",buildingStore.getCoverPictureUrl());
+		model.addAttribute("buildingStoreId",buildingStoreId);
+		
+		return "/phone/buildingMyCenter/storeHeadPage";		
+		
+	}
+	
+	
 	
 	/**
 	 * 3.4 保存店铺设置 修改信息
@@ -142,6 +190,31 @@ public class BuildingMyCenterController extends MyController{
 			else {
 				log.error("店铺保存信息"+key+"失败");
 			}
+		}
+		return renderMsg(status, msg); 
+	}
+	
+	
+	/**
+	 * 3.4.1 保存店铺头图
+	 * @param 	
+	 * @param 
+	 * @return
+	 */
+	@RequestMapping("/saveHeadImage")
+	public ResponseEntity<String> saveStoreHeadImage(Model model,HttpServletRequest request,Long buildingStoreId,@RequestParam("cmfile") CommonsMultipartFile cmfile,Integer fsize){
+		
+		Boolean status = true;
+		String msg = "保存成功";
+		try{						
+			buildingStoreService.saveHeadImage(cmfile, buildingStoreId, fsize);
+		}
+		catch(Exception e){
+			status = false;
+			msg = "保存失败";
+			if(buildingStoreId!=null ) {
+				log.error("店铺"+buildingStoreId+"上传店铺头图失败");
+			}			
 		}
 		return renderMsg(status, msg); 
 	}
@@ -174,9 +247,6 @@ public class BuildingMyCenterController extends MyController{
 		return null;
 	}
 	
-	
-	
-	
 	/**
 	 * 4.申请开店
 	 * @param 	
@@ -185,17 +255,6 @@ public class BuildingMyCenterController extends MyController{
 	 */
 	@RequestMapping("/applyStore")
 	public ResponseEntity<String> applyStore(HttpServletRequest request,String activeCode){
-		return null;
-	}
-	
-	/**
-	 * 难道又是保存店铺头图 ？？？ 暂未可知
-	 * @param 	
-	 * @param 
-	 * @return
-	 */
-	@RequestMapping("/saveHeadImage")
-	public ResponseEntity<String> saveStoreHeadImage(HttpServletRequest request,String originalPicUrl,Long buildingStoreId){
 		return null;
 	}
 	
@@ -241,31 +300,55 @@ public class BuildingMyCenterController extends MyController{
 	 * @return
 	 */
 	@RequestMapping("/goodsManage")
-	public String goodsManage (Model model,HttpServletRequest request,Long storeId,Long state){
-		return null;
+	public String goodsManage (Model model,HttpServletRequest request,Long storeId){
+		model.addAttribute("storeId", storeId);
+		return "/phone/buildingMyCenter/goodsManage";
 	}
 	
 	/**
 	 * 6.1 加载商品数据
-	 * @param state		 状态     1：上架    0：下架
+	 * @param putAwayStatus		 状态     1：上架    0：下架
 	 * @param storeId	 店铺id  
 	 * @return
 	 */
-	@RequestMapping("/moreData")
-	public ResponseEntity<String> moreData(Long state,Long storeId,int page){ 
-		return null;
+	@RequestMapping("/getGoodsPage")
+	public ResponseEntity<String> getGoodsPage(HttpServletRequest request,BuildingGoods goodsQuery,Integer pageSize,Integer pageNum){
+		boolean status = true;
+		String msg = "加载成功";
+		Page<BuildingGoods> page = null;
+		if(goodsQuery.getPutAwayStatus() == null) {
+			msg = "请选择商品类型";
+			status = false;
+		}
+		else if(goodsQuery.getStoreId() == null) {
+			msg = "请输入店铺";
+			status = false;
+		}
+		else {			
+			try{			
+				page = buildingGoodsService.getGoodsPage(goodsQuery, pageSize, pageNum);
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+				status = false;
+				msg = "加载失败";
+				log.error("加载店铺"+goodsQuery.getStoreId()+"商品数据第"+pageNum+"页失败",e);
+			}
+		}
+		return renderPageData(status, msg, page);
 	}			
 	
 	/**
-	 * 6.2添加商品页面
+	 * 6.2跳转到添加商品页面
 	 * @param model
 	 * @param request
 	 * @param storeId
 	 * @return
 	 */
-	@RequestMapping("/addProduct")
-	public String addProduct (Model model,HttpServletRequest request,Long storeId){
-		return "/phone/buildingMyCenter/addProduct";
+	@RequestMapping("/addGoods")
+	public String addGoods (Model model,HttpServletRequest request,Long storeId){		
+		
+		return "/phone/buildingMyCenter/addGoods";
 	}
 	
 	/**
@@ -276,9 +359,33 @@ public class BuildingMyCenterController extends MyController{
 	 * @param goodsPrice
 	 * @return
 	 */
-	@RequestMapping("/add_product_sql")
-	public ResponseEntity<String> add_product_sql(HttpServletRequest request,Long storeId,String url,String goodsName,Double goodsPrice){ 
-		return null;
+	@RequestMapping("/saveGoods")
+	public ResponseEntity<String> saveGoods(HttpServletRequest request,@RequestParam("cmfile") CommonsMultipartFile cmfile,BuildingGoods buildingGoods){
+		boolean status = true;
+		String msg = "保存成功";
+		if(buildingGoods.getStoreId() == null) {
+			status = false;
+			msg = "请输入店铺id"; 
+		}		
+		else if(StringUtils.isBlank(buildingGoods.getGoodsName())){
+			status = false;
+			msg = "请输入商店名称";
+		}
+		else if(buildingGoods.getGoodsPrice() == null){
+			status = false;
+			msg = "请输入商品价格";
+		}
+		else {			
+			try{
+				buildingGoodsService.saveGoods(cmfile, buildingGoods, null);
+			}
+			catch(Exception e){
+				status = false;
+				msg = "保存失败";
+				log.error("店铺"+buildingGoods.getStoreId() + "保存商品失败",e);
+			}
+		}
+		return renderMsg(status, msg);
 	}
 	
 	/**
@@ -287,9 +394,39 @@ public class BuildingMyCenterController extends MyController{
 	 * @param state		状态     1：上架    0：下架
 	 * @return
 	 */
-	@RequestMapping("/changeGoods")
-	public ResponseEntity<String> goodsUnder(int page,Long storeId,Long state){
-		return null;
+	@RequestMapping("/putAwayGoods")
+	public ResponseEntity<String> putAwayGoods(Long goodsId){
+		boolean status = true;
+		String msg = "保存成功";		
+		try{
+			buildingGoodsService.putAwayGoods(goodsId);
+		}
+		catch(Exception e){
+			status = false;
+			msg = "保存失败";
+			log.error("商品:"+goodsId+"上下架失败",e);
+		} 
+		return renderMsg(status, msg);
+	}
+	
+	/**
+	 * 6.5 删除商品
+	 * @param goods  店铺id  
+	 * @return
+	 */
+	@RequestMapping("/deleteGoods")
+	public ResponseEntity<String> deleteGoods(Long goodsId){
+		boolean status = true;
+		String msg = "保存成功";		
+		try{
+			buildingGoodsService.deleteGoods(goodsId);
+		}
+		catch(Exception e){
+			status = false;
+			msg = "保存失败";
+			log.error("商品:"+goodsId+"删除失败",e);
+		} 
+		return renderMsg(status, msg);
 	}
 	
 	/**
@@ -333,7 +470,7 @@ public class BuildingMyCenterController extends MyController{
 	public ResponseEntity<String> uploadCasePic(Model model,@RequestParam("cmfile") CommonsMultipartFile[] cmfiles,HttpServletRequest request){
 		boolean status = true;
 		String msg = "上传成功";
-		List<String> list = null;			
+		List<UploadFile> list = null;			
 		BuildingStore store = buildingStoreService.getStoreInfo(request);
 		if(store == null) {
 			msg = "对不起，您暂未申请店铺";
@@ -341,7 +478,7 @@ public class BuildingMyCenterController extends MyController{
 		}
 		else {			
 			try{
-				String path = "store/"+store.getId();
+				String path = buildingStoreService.getConfig("caseImgFile");
 				list =	ImageUtil.uploadMutiPicture(cmfiles,null,path);
 			}
 			catch(Exception e){

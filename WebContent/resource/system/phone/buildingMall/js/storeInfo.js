@@ -14,7 +14,7 @@
     //初始化数据
     function initData(){
     	pageNum = 1;
-    	finished = 1;
+    	finished = 1;     
     	sover = 0;
     	$(".practiceCase-list").empty();
     	$(".contentbox>ul").empty();
@@ -199,7 +199,7 @@ function changeData(type){
 
 $(function(){
 	//加载数据
-	loadCase(pageNum,5);
+	loadCase(pageNum,5);	
 })
 
  

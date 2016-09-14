@@ -10,8 +10,6 @@
 		<link rel="stylesheet" type="text/css" href="${ctx}/resource/system/phone/buildingMyCenter/css/upload.css"/>
 		<%-- <link href="${ctx}/resource/system/phone/buildingMall/css/base.css" rel="stylesheet" type="text/css" /> --%>
 		<%-- <script src="${ctx}/resource/system/phone/js/utils/common/config.js" type="text/javascript" charset="utf-8"></script> --%>
-		<script type="text/javascript" src="${ctx}/resource/system/common/js/jquery-1.10.1.min.js" ></script>
-		<script src="${ctx}/resource/module/layer/layer.js"></script>
 		<script src="${ctx}/resource/system/phone/buildingMyCenter/js/addCase.js"></script>
 		<script type="text/javascript" src="${ctx}/resource/system/common/js/ajaxfileupload.js"></script>
 	<body>
