@@ -3,12 +3,18 @@ package com.terry.util;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
@@ -18,6 +24,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.*;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -64,6 +71,53 @@ public class FileUtil {
 		}
          
     }
+	
+	/**
+	 * 下载文件
+	 * @param request
+	 * @param response
+	 * @param tableDom
+	 * @return
+	 */
+	public void exportExcel(HttpServletRequest request,String filePath,HttpServletResponse response){
+		
+		//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		//String path = request.getServletContext().getRealPath("/")+"upload\\xls\\orderCount_"+sdf.format(new Date())+".xls";
+		//获得文件名
+		File file = new File(filePath);
+		String fileName = file.getName();
+		try {
+			//statisticsService.genExcel(path,tableDom);
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("multipart/form-data");
+			response.addHeader("Content-Disposition", "attachment;filename="+fileName);				
+			// 以流的形式下载文件
+			InputStream fis = new BufferedInputStream(new FileInputStream(
+					filePath));
+			OutputStream os = new BufferedOutputStream(
+					response.getOutputStream());
+			byte[] buffer = new byte[1024];
+			int length;
+			while((length = fis.read(buffer))>0){
+				os.write(buffer, 0, length);
+			}
+			fis.close();
+			os.flush();
+			os.close();
+		} catch (UnsupportedEncodingException e) {
+			logger.error("FileUtil readFile Encoding error",e);
+			e.printStackTrace();
+		} 
+		catch (FileNotFoundException e) {
+			logger.error("FileUtil readFile FileNotFound",e);
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("FileUtil readFile IOException",e);
+			e.printStackTrace();
+		} 		
+}
+
+	
 	public static byte[] readFile(File file) {
 		if (file.isDirectory()) {
 			return null;
@@ -240,80 +294,5 @@ public class FileUtil {
 			return pictureBuilder.toString();
 		}		
 	} 
-	 
-	/**
-	 * 拼接图片路径
-	 * @param pictureUrl
-	 * @param newOriginalUrl
-	 * @param newAppUrl
-	 * @return
-	 */
-	public static String addPicture(String pictureUrl,String newOriginalUrl,String newAppUrl){
-		if(pictureUrl == null||"[]".equals(pictureUrl)){
-			StringBuilder builder = new StringBuilder();
-			builder.append("[{");
-			builder.append("\"originalPicUrl\":");
-			builder.append("\""+newOriginalUrl+"\"");
-			builder.append(",");
-			builder.append("\"phonePicUrl\":");
-			builder.append("\""+newAppUrl+"\"");
-			builder.append("}]");			
-			return builder.toString();
-		}
-		else{
-			StringBuilder pictureBuilder = new StringBuilder(pictureUrl);
-			pictureBuilder.deleteCharAt(pictureBuilder.length()-1);
-			pictureBuilder.append(",");
-			pictureBuilder.append("{");
-			pictureBuilder.append("\"originalPicUrl\":");
-			pictureBuilder.append("\""+newOriginalUrl+"\"");
-			pictureBuilder.append(",");
-			pictureBuilder.append("\"phonePicUrl\":");
-			pictureBuilder.append("\""+newAppUrl+"\"");
-			pictureBuilder.append("}]");	
-			return pictureBuilder.toString();
-		}
-	}  
-	
-	
-	/**
-	 * 拼接图片路径
-	 * @param pictureUrl
-	 * @param newOriginalUrl
-	 * @param newAppUrl
-	 * @return
-	 */
-	public static String addPicture(String pictureUrl,String newOriginalUrl,String newAppUrl,String newCutUrl){
-		if(pictureUrl == null||"[]".equals(pictureUrl)){
-			StringBuilder builder = new StringBuilder();
-			builder.append("[{");
-			builder.append("\"cutPicUrl\":");
-			builder.append("\""+newCutUrl+"\"");
-			builder.append(",");
-			builder.append("\"originalPicUrl\":");
-			builder.append("\""+newOriginalUrl+"\"");
-			builder.append(",");
-			builder.append("\"phonePicUrl\":");
-			builder.append("\""+newAppUrl+"\"");
-			builder.append("}]");			
-			return builder.toString();
-		}
-		else{
-			StringBuilder pictureBuilder = new StringBuilder(pictureUrl);
-			pictureBuilder.deleteCharAt(pictureBuilder.length()-1);
-			pictureBuilder.append(",");
-			pictureBuilder.append("{");
-			pictureBuilder.append("\"cutPicUrl\":");
-			pictureBuilder.append("\""+newCutUrl+"\"");
-			pictureBuilder.append(",");
-			pictureBuilder.append("\"originalPicUrl\":");
-			pictureBuilder.append("\""+newOriginalUrl+"\"");
-			pictureBuilder.append(",");
-			pictureBuilder.append("\"phonePicUrl\":");
-			pictureBuilder.append("\""+newAppUrl+"\"");
-			pictureBuilder.append("}]");	
-			return pictureBuilder.toString();
-		}
-	}  
 	
 }

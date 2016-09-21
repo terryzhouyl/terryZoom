@@ -164,7 +164,7 @@ public class BuildingMallController extends MyController{
 		return renderMsg(success, msg);		
 	} 
 	
-
+	
 //	
 //	/**
 //	 * 编辑商品

@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.terry.CommonVar;
 import com.terry.controller.MyController;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingGoods;
 import com.terry.entity.BuildingStore;
+import com.terry.entity.WeixinUser;
 import com.terry.entity.specialbean.UploadFile;
 import com.terry.service.impl.BuildingGoodsService;
 import com.terry.service.impl.BuildingStoreService;
@@ -131,9 +133,10 @@ public class BuildingMyCenterController extends MyController{
 				// TODO Auto-generated catch block
 				status = false;
 				msg = "保存失败";
-				BuildingStore store = buildingStoreService.getStoreInfo(request);
-				if(store!=null){					
-					log.error("保存店铺:"+store.getId()+",保存失败",e);
+				//BuildingStore store = buildingStoreService.getStoreInfo(request);
+				Long storeId = buildingStoreService.getStoreId(request);
+				if(storeId!=null){					
+					log.error("保存店铺:"+storeId+",保存失败",e);
 				}
 				else {
 					log.error("保存店铺,保存失败",e);
@@ -263,35 +266,55 @@ public class BuildingMyCenterController extends MyController{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/myConfigIndex")
+	@RequestMapping("/userInfo")
 	public String myConfigIndex(HttpServletRequest request,Model model){
-		
-		return "/phone/buildingMyCenter/myConfigIndex";
-	}
-	
-	/**
-	 * 5.1  保存 修改后的个人信息
-	 * @return
-	 */
-	@RequestMapping("/savePersonalInfo")
-	public ResponseEntity<String> savePersonalInfo(HttpServletRequest request,String nickname,Integer sex){
-		return null;
+		WeixinUser user = buildingStoreService.getWeixinUser(request);
+		model.addAttribute("userInfo", user);
+		return "/phone/buildingMyCenter/userInfo";
 	}
 	
 	
 	/**
-	 * 5.2 跳转修改个人信息页面  功能暂未可知
+	 * 5.1 跳转修改个人信息页面  
 	 * @param request
 	 * @param nickname
 	 * @param sex
 	 * @return
 	 */
-	@RequestMapping("/modifyPersonalInfo")
+	@RequestMapping("/userInfoModify")
 	public String modifyPersonalInfo(HttpServletRequest request,Model model,String modifyValue){
 		
 		model.addAttribute("modifyValue",modifyValue);
 		return "/phone/buildingMyCenter/modifyPersonalInfo";
 	}
+	
+	/**
+	 * 5.2  保存 修改后的个人信息
+	 * @return
+	 */
+	@RequestMapping("/saveUserInfo")
+	public ResponseEntity<String> savePersonalInfo(HttpServletRequest request,String nickname,Integer sex){
+		boolean status = true;
+		String msg = "加载成功";
+		
+		try{
+			buildingStoreService.saveUserInfo(request, sex, nickname);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			status = false;
+			msg = "操作失败";  
+			WeixinUser user = (WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);
+			if(user == null) {				
+				log.error("保存用户个人信息失败",e);				
+			}
+			else {
+				log.error("保存用户:"+user.getId()+"个人信息失败",e);
+			}
+		}		
+		return renderMsg(status, msg);
+	}
+	
 	
 	/**
 	 * 6.跳转到商品管理页面
@@ -347,7 +370,7 @@ public class BuildingMyCenterController extends MyController{
 	 */
 	@RequestMapping("/addGoods")
 	public String addGoods (Model model,HttpServletRequest request,Long storeId){		
-		
+		model.addAttribute("storeId", storeId);
 		return "/phone/buildingMyCenter/addGoods";
 	}
 	

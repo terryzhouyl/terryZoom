@@ -305,7 +305,7 @@ public class ImageUtil {
 				// 缩略图和原图一致
 				suoPath = originalPicUrl;
 			}
-			new UploadFile(suoPath);			
+			uploadFile = new UploadFile(suoPath);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

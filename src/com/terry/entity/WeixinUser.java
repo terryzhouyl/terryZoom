@@ -14,8 +14,9 @@ import javax.persistence.Table;
 /**
  * 微信用户表
  */
+@SuppressWarnings("serial")
 @Entity
-@Table(name = "el_weixin_user")
+@Table(name = "weixin_user")
 public class WeixinUser extends GenericEntity<Long>{
 	
 	//微信基础信息
@@ -33,20 +34,11 @@ public class WeixinUser extends GenericEntity<Long>{
     private Date createTime;//添加用户时间
 	private String lat;//经度
 	private String lng;//纬度
-
-
-
 	//扩展信息
   	private String subscription;//关注描述
   	private String phone;//电话
     private Integer status;//状态 1未删除 2已删除
     
-//	public Integer getId() {
-//		return id;
-//	}
-//	public void setId(Integer id) {
-//		this.id = id;
-//	}
 	public Integer getSubscribe() {
 		return subscribe;
 	}

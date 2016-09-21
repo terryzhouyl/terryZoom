@@ -78,8 +78,8 @@
 					for(var i=0; i<datas.length; i++){  
 	                    var obj = datas[i];	  	                    
 	                    resultValue += "<li>";
-	                    var realPath = imgPath + "/" + obj.filePath + "/" + obj.smallPicUrl;
-	                    resultValue +="<a href='#' title=''><img width='340' height='250' src='"+realPath+"' alt=''  onerror='javascript:this.src=\""+ctx+"/resource/system/common/image/default.png\"' /></a>";
+	                    var realPath = imgPath + "/" + obj.imageFile + "/" + obj.smallPicUrl;
+	                    resultValue +="<a href='#' title=''><img width='250' height='250' src='"+realPath+"' alt=''  onerror='javascript:this.src=\""+ctx+"/resource/system/common/image/default.png\"' /></a>";
 	                    resultValue +="<a href='#' title=''><p>"+obj.goodsName+"</p></a>";
 	                    resultValue +="<span>";
 	                    resultValue +="￥"+obj.goodsPrice+obj.unit;
@@ -168,21 +168,14 @@
  }
  
  /**
-  * tab页切换  今天怎么连这么个玩意儿都不行呢。。。。。暂时先放着吧
+  * 
   * @param putAwayStatus
   */
- function changeGoodsInfo(putAwayStatus){
+ function changeGoodsInfo(putAwayStatus,obj){
 	 		
 	 initData();
-	 getGoodsPage(putAwayStatus);	
-	 	 	 
-	 if(putAwayStatus == 1) { //上架
-		 $(".m_back li:eq(0)").addClass("hover").siblings().removeClass("hover");
-	 }
-	 else{
-		 $(".m_back li:eq(1)").addClass("hover").siblings().removeClass("hover");
-	 }
-	 //$(this).parent().addClass("hover").siblings().removeClass("hover");
+	 getGoodsPage(putAwayStatus);
+	 $(obj).parent().addClass("hover").siblings().removeClass("hover");
 	 $("#content").empty();
  }
  

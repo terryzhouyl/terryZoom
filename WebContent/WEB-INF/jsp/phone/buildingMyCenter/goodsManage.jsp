@@ -20,10 +20,10 @@
 <div class="attentionTop">
 	<i class="m_back"></i>
 	<ul>
-		<li class="hover"><a href="javascript:changeGoodsInfo(1)">已上架</a></li>
-		<li><a href="javascript:changeGoodsInfo(0)">已下架</a></li>
+		<li class="hover"><a href="#" onclick="changeGoodsInfo(1,this)">已上架</a></li>
+		<li><a href="#" onclick="changeGoodsInfo(0,this)">已下架</a></li>
 	</ul>
-	<a href="${ctx}/phone/buildingMyCenter/addGoods.htm" class="r_back">增加</a>
+	<a href="${ctx}/phone/buildingMyCenter/addGoods.htm?storeId=${storeId}" class="r_back">增加</a>
 </div>
 
 

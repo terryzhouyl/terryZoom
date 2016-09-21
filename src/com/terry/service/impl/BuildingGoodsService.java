@@ -144,6 +144,9 @@ public class BuildingGoodsService extends BaseService{
 			newGoods.setPhonePicUrl(appFile.getFileName());
 			newGoods.setSmallPicUrl(smallFile.getFileName());
 			newGoods.setImageFile(filePath);
+			newGoods.setPutAwayStatus(1); //上架
+			newGoods.setStatus(CommonVar.SF_SUCCESS);
+			newGoods.setCreateTime(new Date());
 		}	
 		
 	}

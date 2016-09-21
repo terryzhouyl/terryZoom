@@ -1,5 +1,8 @@
 package com.terry.entity;
 
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +32,7 @@ public class BuildingGoods extends GenericEntity<Long>{
 	private String phonePicUrl;	//压缩图片
 	private String imageFile; //图片路径
 	private Integer status;
+	private Date createTime; 
 	
 	public String getPhonePicUrl() {
 		return phonePicUrl;
@@ -97,6 +101,12 @@ public class BuildingGoods extends GenericEntity<Long>{
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 	
 	

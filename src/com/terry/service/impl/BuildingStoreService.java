@@ -21,6 +21,7 @@ import com.terry.CommonVar;
 import com.terry.dao.BuildingFocusDao;
 import com.terry.dao.BuildingStoreDao;
 import com.terry.dao.BuildingTypeDao;
+import com.terry.dao.impl.WeixinUserDaoImpl;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingFocus;
 import com.terry.entity.BuildingStore;
@@ -41,8 +42,13 @@ public class BuildingStoreService extends BaseService{
 	@Resource(name="buildingFocusDaoImpl")
 	private BuildingFocusDao buildingFocusDaoImpl;
 	
+	@Resource(name="weixinUserDaoImpl")
+	private WeixinUserDaoImpl weixinUserDaoImpl;
+	 
+	
 	public int weixinLogin(HttpServletRequest request, String code) {
 		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
@@ -262,4 +268,35 @@ public class BuildingStoreService extends BaseService{
 		return buildingStoreDaoImpl.getBy(BuildingStore.class,"memberId",wxuser.getId());
 	}
 		
+	/**
+	 * 根据请求查询店铺Id
+	 * @param request
+	 * @return
+	 */
+	public Long getStoreId(HttpServletRequest request) {
+		WeixinUser wxuser =	(WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);		
+		return buildingStoreDaoImpl.getStoreIdByMemberId(wxuser.getId());
+	}
+	
+	/**
+	 * 根据请求查询当前登录用户信息
+	 * @param request
+	 */
+	public WeixinUser getWeixinUser(HttpServletRequest request) {
+		WeixinUser wxuser =	(WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);	
+		return wxuser;
+	}
+	
+	/**
+	 * 保存用户信息
+	 * @param request
+	 * @param sex
+	 * @param nickname
+	 */
+	public void saveUserInfo(HttpServletRequest request,Integer sex,String nickname) {
+		WeixinUser wxuser =	(WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);
+		wxuser.setSex(sex);
+		wxuser.setNickname(nickname);
+		weixinUserDaoImpl.saveOrUpdate(wxuser);
+	}
 }

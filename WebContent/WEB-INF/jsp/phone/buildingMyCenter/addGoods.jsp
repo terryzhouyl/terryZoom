@@ -32,7 +32,7 @@
 		    	return false;
 		    }		    
 		    
-		    var param = {'goodsName':goodsName,'description':description,'goodsPrice':goodsPrice};
+		    var param = {'storeId':'${storeId}','goodsName':goodsName,'description':description,'goodsPrice':goodsPrice};
 		    $.ajaxFileUpload({
 				url:'${ctx}/phone/buildingMyCenter/saveGoods.json', 
 				//用于文件上传的服务器端请求地址
@@ -43,7 +43,7 @@
 				success: function (result) {
 					if(result.status == true|| result.status == "true") {
 						layer.alert("保存成功");	
-						window.location.href = "";
+						window.location.href = "${ctx}/phone/buildingMyCenter/goodsManage.htm?storeId=${storeId}";
 					}	
 					else {
 						layer.alert(result.msg);
@@ -84,7 +84,7 @@
 </div>
 头部的结束-->
 <form id="validateForm" class="form-horizontal">
-	<input type="file" style="display: none;" name="uploadFile" id="uploadFile"/>
+	<input type="file" style="display: none;" name="cmfile" id="uploadFile"/>
 	<div class="attentionTop">
 		<i class="m_back"></i>
 		<h2>添加商品</h2>

@@ -1,6 +1,8 @@
 package com.terry.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -30,6 +32,31 @@ public class BuildingStoreDaoImpl extends BaseDaoImpl<BuildingStore> implements 
 		// TODO Auto-generated method stub
 		EnhancedRule rule = new EnhancedRule();			
 		return null;
+	}
+
+	@Override
+	public Long getStoreIdByMemberId(Long memberId) {
+		// TODO Auto-generated method stub
+		String sql = "select id from el_building_Store where memberId=:memberId";
+		//List<Long> paramList = new ArrayList<>();
+		//paramList.add(memberId);
+		Object result =	getSession().createQuery(sql).setParameter("memberId",memberId).uniqueResult();
+		if(result!=null) {
+			return Long.parseLong(result.toString());
+		}
+		else {
+			return null;
+		}		
+	}
+
+	@Override
+	public List<Map<String, Object>> queryStoreStatisticInfo() {
+		// TODO Auto-generated method stub
+		String sql = "SELECT "+
+				 "bs.storeNo AS 'storeNo',wu.nickname AS 'nickname',bs.title AS 'title',bs.contactPhone AS 'contackPhone',"+
+				 "CONCAT(bs.province,bs.city,bs.detailAddress) AS 'address',bs.promotion AS 'promotion',bs.mainBusiness AS 'mainBusiness',bs.businessTime AS 'businessTime' "+
+				 "FROM el_building_store bs,weixin_user wu WHERE bs.`memberId` = wu.id ";
+		return	this.queryListForSql(sql, null);
 	}
 	
 	

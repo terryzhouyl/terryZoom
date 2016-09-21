@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<import>
+	<importUnit>
+		<name>店铺数据导入</name>
+		<columns>
+			<column name="storeNo"  description="店铺Id" />
+			<column name="nickname"  description="昵称" />
+			<column name="title"  description="店铺名称" />
+			<column name="contactPhone"  description="联系电话" />
+			<column name="address"  description="联系地址" />			
+			<column name="promotion"  description="促销信息" />			
+			<column name="mainBusiness"  description="主营业务" />
+			<column name="businessTime"  description="营业时间" />			
+		</columns>	 
+	</importUnit>
+</import>

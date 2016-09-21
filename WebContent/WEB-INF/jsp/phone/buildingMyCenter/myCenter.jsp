@@ -17,7 +17,7 @@
 <div class="nickname">
 	<dl>
 		<dt>
-            <a href="${ctx}/user/userInfo"><img src="${SESSION_WEIXIN.headimgurl}" alt="" /></a>
+            <a href="${ctx}/phone/buildingMyCenter/userInfo.htm?storeId=${buildingStore.id}"><img src="${SESSION_WEIXIN.headimgurl}" alt="" /></a>
 		</dt>
 		<dd><h3>${SESSION_WEIXIN.nickname}(ID:${userInfo.id})</h3></dd>
 		<dd>店铺:${buildingStore.title}</dd>
@@ -29,7 +29,7 @@
 		<ul>  
 			<li ><a href="${ctx}/user/getQRCode" ><i class="iconfont userList-ico1">&#xe607;</i>我的店铺二维码&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 			<li><a href="${ctx}/phone/buildingMyCenter/goodsManage.htm?storeId=${buildingStore.id}"><i class="iconfont userList-ico2">&#xe60f;</i>商品管理</a></li>
-			<li><a href="${ctx}/phone/buildingMyCenter/caseManage.htm?storeId=${buildingStore.id}"><i class="iconfont userList-ico3">&#xe610;</i>案例管理</a></li>
+			<li><a href="${ctx}/phone/buildingMyCenter/addCase.htm?storeId=${buildingStore.id}"><i class="iconfont userList-ico3">&#xe610;</i>案例管理</a></li>
 		</ul>
 		<ul>
 			<li><a href="${ctx}/phone/buildingMall/storeInfo.htm?storeId=${buildingStore.id}"><i class="iconfont userList-ico4">&#xe60b;</i>查看店铺</a></li>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export>
+	<exportUnit>
+		<id>storeDataExport</id>
+		<name>店铺数据导出</name>
+		<sql value="select bs.storeNo AS 'storeNo',wu.nickname AS 'nickname',bs.title AS 'title',bs.contactPhone AS 'contackPhone',
+				   CONCAT(bs.province,bs.city,bs.detailAddress) AS 'address',bs.promotion AS 'promotion',bs.mainBusiness AS 'mainBusiness',bs.businessTime AS 'businessTime'
+				   FROM el_building_store bs,weixin_user wu WHERE bs.`memberId` = wu.id " />
+		<head value="storeNo,nickname,title,contactPhone,address,promotion,mainBusiness,businessTime"></head>				   
+		<columns>
+			<column name="storeNo"  description="店铺Id" />
+			<column name="nickname"  description="昵称" />
+			<column name="title"  description="店铺名称" />
+			<column name="contactPhone"  description="联系电话" />
+			<column name="address"  description="联系地址" />			
+			<column name="promotion"  description="促销信息" />			
+			<column name="mainBusiness"  description="主营业务" />
+			<column name="businessTime"  description="营业时间" />			
+		</columns>	   
+	</exportUnit>	
+</export>

@@ -30,8 +30,12 @@ public class UploadFile {
 	}
 
 	public UploadFile(String realPath){
-		int index = realPath.indexOf("/");
-		new UploadFile(realPath.substring(0,index),realPath.substring(index+1));
+		int index = realPath.lastIndexOf("/");
+		String filePath = realPath.substring(0,index);
+		String fileName = realPath.substring(index+1);
+		this.filePath = filePath;
+		this.fileName = fileName;
+		this.realPath = realPath;
 	}
 	
 	public String getFilePath() {
