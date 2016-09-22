@@ -80,8 +80,9 @@ function uploadPic(){
 			  if(data.status==true || data.status=="true") {
 				  var imgHtml = '';
 				  imgArr = data.data;
+				  console.log(imgArr);
 				  for(var i=0;i<imgArr.length;i++){
-					  imgHtml += "<img style='max-width: 160x;max-height: 160px; margin-right:10px' src='"+imgPath+"/"+imgArr[i]+"' />";	
+					  imgHtml += "<img style='max-width: 160x;max-height: 160px; margin-right:10px' src='"+imgPath+"/"+imgArr[i].realPath+"' />";	
 					  uploadImgPath += imgArr[i]+","
 			  	  }				  
 				  //$(".picList").append(imgHtml);
