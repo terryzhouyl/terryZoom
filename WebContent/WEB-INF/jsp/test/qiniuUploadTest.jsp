@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/taglibs.jsp"%>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,12 +16,27 @@
 	   		<input type="file" name="uploadfile" id="uploadfile">
 	   </form>
 	   <button id="selectImage"></button>
-</body>
+</body>     
 <script>
-	function getUptoken(){
-		
+	function getUploadToken() {
+		var returnData;
+		$.ajax({
+			type:"post",
+			url:"${ctx}/info/",
+			data:data,
+			async:false,
+			success :function (result){
+				result = eval("("+result+")");
+	        	if(result.status == "true" || result.status == true){
+	        		returnData = result.data;
+	        	}
+	        	else {
+	        		alert(result.msg);
+	        	}
+			}
+		});
+		return returnData;
 	}
-
 
 	var upload = Qiniu.uploader({
 		runtimes : 'html5',
@@ -91,5 +107,7 @@
 			//uploader为一个plupload对象，继承了所有plupload的方法
 		} 
 	})
+	
+	
 </script>
 </html>

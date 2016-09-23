@@ -19,12 +19,16 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.terry.BusinessException;
 import com.terry.CommonVar;
 import com.terry.dao.BuildingFocusDao;
+import com.terry.dao.BuildingScoreDao;
 import com.terry.dao.BuildingStoreDao;
+import com.terry.dao.BuildingTagDao;
 import com.terry.dao.BuildingTypeDao;
 import com.terry.dao.impl.WeixinUserDaoImpl;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingFocus;
+import com.terry.entity.BuildingScore;
 import com.terry.entity.BuildingStore;
+import com.terry.entity.BuildingTag;
 import com.terry.entity.BuildingType;
 import com.terry.entity.WeixinUser;
 import com.terry.entity.specialbean.UploadFile;
@@ -44,7 +48,13 @@ public class BuildingStoreService extends BaseService{
 	
 	@Resource(name="weixinUserDaoImpl")
 	private WeixinUserDaoImpl weixinUserDaoImpl;
-	 
+	
+	@Resource(name="buildingTagDaoImpl")
+	private BuildingTagDao buildingTagDaoImpl;
+	
+	@Resource(name="buildingScoreDaoImpl")
+	private BuildingScoreDao buildingScoreDaoImpl;
+		 
 	
 	public int weixinLogin(HttpServletRequest request, String code) {
 		// TODO Auto-generated method stub
@@ -299,4 +309,39 @@ public class BuildingStoreService extends BaseService{
 		wxuser.setNickname(nickname);
 		weixinUserDaoImpl.saveOrUpdate(wxuser);
 	}
+	
+	/**
+	 * 查询所有有效的标签列表
+	 */
+	public List<BuildingTag> getAllTags() {		
+		return buildingTagDaoImpl.findAllTags(); 				
+	}
+	
+	/**
+	 * 根据标签查询店铺
+	 * @return
+	 */
+	public List<BuildingStore> queryStoresByTag(BuildingStore query) {		
+		
+		
+		
+		return buildingStoreDaoImpl.queryList(query);
+	}
+	
+	/**
+	 * 店铺评分
+	 */
+	public void saveScore(BuildingScore score,HttpServletRequest request){
+		WeixinUser wxuser =	(WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);		
+		score.setUserId(wxuser.getId());
+		score.setCreateTime(new Date());				
+		buildingScoreDaoImpl.saveOrUpdate(score);
+		
+		double avgScore =  buildingScoreDaoImpl.getAvgScore();
+		BuildingStore store = buildingStoreDaoImpl.get(BuildingStore.class,score.getStoreId());
+		store.setScore(avgScore);
+		buildingStoreDaoImpl.saveOrUpdate(store);
+	}
+	
+	
 }

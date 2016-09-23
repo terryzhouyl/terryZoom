@@ -30,8 +30,11 @@ public class BuildingStoreDaoImpl extends BaseDaoImpl<BuildingStore> implements 
 	@Override
 	public List<BuildingStore> queryList(BuildingStore query) {
 		// TODO Auto-generated method stub
-		EnhancedRule rule = new EnhancedRule();			
-		return null;
+		EnhancedRule rule = new EnhancedRule();	
+		if(query.getTags() !=null) {
+			rule.add(Restrictions.ilike("tags",query.getTags()));
+		}				
+		return this.queryList(query);
 	}
 
 	@Override

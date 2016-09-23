@@ -19,6 +19,6 @@ public class BaseService{
 	 */
 	public String getConfig(String key) {
 		return systemProperties.getProperties(key);
-	}
+	}	
 	
 }

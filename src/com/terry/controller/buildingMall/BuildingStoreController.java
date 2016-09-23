@@ -19,7 +19,9 @@ import com.terry.controller.MyController;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingCase;
 import com.terry.entity.BuildingGoods;
+import com.terry.entity.BuildingScore;
 import com.terry.entity.BuildingStore;
+import com.terry.entity.BuildingTag;
 import com.terry.entity.BuildingType;
 import com.terry.entity.WeixinUser;
 import com.terry.service.impl.BuildingGoodsService;
@@ -34,7 +36,7 @@ public class BuildingStoreController extends MyController {
 		
 	@Resource(name="buildingGoodsService")
 	BuildingGoodsService buildingGoodsService;
-			
+				
 	/****
 	 * 异步加载 路径命名都以 动词开头  并且每个catch中必须都得 打印错误日志
 	 * 跳转页面 路径命名都是 名词
@@ -249,5 +251,63 @@ public class BuildingStoreController extends MyController {
 		return renderMsg(status, msg);
 	}
 	
+	/**
+	 * 获得所有标签
+	 * @param request
+	 */
+	@RequestMapping("/getAllBuildingTags")
+	public ResponseEntity<String> getAllBuildingTags(HttpServletRequest request) {
+		
+		Boolean status = true;
+		String msg = "查询成功";
+		List<BuildingTag> list = null;
+		try{			
+			list = buildingStoreService.getAllTags();
+		}
+		catch(Exception e){
+			status = false;
+			msg = "请求失败";
+			log.error("获得所有标签失败");
+		}
+		return renderData(status, msg, list);
+	}
 	
+	/**
+	 * 根据标签查询店铺
+	 */
+	@RequestMapping("/queryStoresByTag")
+	public ResponseEntity<String> queryStoreByTag(HttpServletRequest request,BuildingStore query) {
+		Boolean status = true;
+		String msg = "查询成功";
+		List<BuildingStore> list = null;
+		
+		try{
+			list = buildingStoreService.queryStoresByTag(query);
+		}
+		catch(Exception e){
+			status = false;
+			msg = "请求失败";
+			log.error("获得所有标签失败");
+		}
+		return renderData(status,msg,list);
+	}
+	
+	/**
+	 * 保存评分
+	 */
+	@RequestMapping("/queryStoreByTag")
+	public ResponseEntity<String> queryAllBuiding(HttpServletRequest request,BuildingScore scoreQuery) {
+		Boolean status = true;
+		String msg = "查询成功";				
+		try{
+			buildingStoreService.saveScore(scoreQuery, request);
+		}
+		catch(Exception e){
+			status = false;
+			msg = "请求失败";
+			WeixinUser user = (WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);
+			log.error("用户"+user.getNickname()+"为店铺"+scoreQuery.getStoreId()+"评分"+scoreQuery.getScore()+"分,失败");
+		}
+		return renderMsg(status, msg);
+	}
 }

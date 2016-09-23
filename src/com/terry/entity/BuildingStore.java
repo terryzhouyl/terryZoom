@@ -42,10 +42,15 @@ public class BuildingStore extends GenericEntity<Long>{
 	@Transient
 	private Integer isFocus; //是否关注
 	private Integer imageStatus; //是否上传至七牛云 1.是 2.否	
-	
-	
-	
-	
+	private String tags; //相关标签组
+	private Double score; //评分
+			
+	public Double getScore() {
+		return score;
+	}
+	public void setScore(Double score) {
+		this.score = score;
+	}
 	public String getImageFile() {
 		return imageFile;
 	}
@@ -180,6 +185,12 @@ public class BuildingStore extends GenericEntity<Long>{
 	@Transient
 	public void setIsFocus(Integer isFocus) {
 		this.isFocus = isFocus;
+	}
+	public String getTags() {
+		return tags;
+	}
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 	
 	

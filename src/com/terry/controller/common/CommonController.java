@@ -1,6 +1,8 @@
 package com.terry.controller.common;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,7 +14,9 @@ import com.terry.controller.MyController;
 import com.terry.entity.City;
 import com.terry.entity.Province;
 import com.terry.service.impl.CityService;
+import com.terry.service.impl.CommonService;
 import com.terry.service.impl.ProvinceService;
+import com.terry.util.Auth;
 
 @Controller("commonController")
 @RequestMapping(value = "/common")
@@ -23,6 +27,9 @@ public class CommonController extends MyController{
 	
 	@Resource(name="provinceService")
 	ProvinceService provinceService;
+		
+	@Resource(name="commonService")
+	CommonService commonService; 
 	
 	@RequestMapping("/getCities")
 	public ResponseEntity<String> getCities (Integer provinceId) {
@@ -56,5 +63,23 @@ public class CommonController extends MyController{
 			e.printStackTrace();
 		}
 		return renderData(status, msg, list);
+	}
+	
+	@RequestMapping("/getUploadToken")
+	public ResponseEntity<String> getUploadToken () {
+		
+		String msg = "请求成功";
+		boolean status = true;
+		Map<String, String> map = new HashMap<>();
+		try{
+			map.put("uptoken",commonService.getQiniuUploadToken());
+		}
+		catch(Exception e){			
+			status = false;
+			msg = "请求失败";
+			log.error("获取七牛上传凭证失败");
+			e.printStackTrace();
+		}
+		return renderData(status, msg, map);
 	}
 }
