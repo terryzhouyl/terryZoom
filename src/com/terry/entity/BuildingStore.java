@@ -1,5 +1,7 @@
 package com.terry.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,9 +44,18 @@ public class BuildingStore extends GenericEntity<Long>{
 	@Transient
 	private Integer isFocus; //是否关注
 	private Integer imageStatus; //是否上传至七牛云 1.是 2.否	
-	private String tags; //相关标签组
 	private Double score; //评分
-			
+	@Transient
+	private List<StoreTag> tagList;
+	
+	@Transient		
+	public List<StoreTag> getTagList() {
+		return tagList;
+	}
+	@Transient
+	public void setTagList(List<StoreTag> tagList) {
+		this.tagList = tagList;
+	}
 	public Double getScore() {
 		return score;
 	}
@@ -185,12 +196,6 @@ public class BuildingStore extends GenericEntity<Long>{
 	@Transient
 	public void setIsFocus(Integer isFocus) {
 		this.isFocus = isFocus;
-	}
-	public String getTags() {
-		return tags;
-	}
-	public void setTags(String tags) {
-		this.tags = tags;
 	}
 	
 	

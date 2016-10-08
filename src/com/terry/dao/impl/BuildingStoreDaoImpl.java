@@ -1,6 +1,7 @@
 package com.terry.dao.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,13 +31,19 @@ public class BuildingStoreDaoImpl extends BaseDaoImpl<BuildingStore> implements 
 	@Override
 	public List<BuildingStore> queryList(BuildingStore query) {
 		// TODO Auto-generated method stub
-		EnhancedRule rule = new EnhancedRule();	
-		if(query.getTags() !=null) {
-			rule.add(Restrictions.ilike("tags",query.getTags()));
-		}				
+		//EnhancedRule rule = new EnhancedRule();	
+		
 		return this.queryList(query);
 	}
-
+	
+	@Override
+	public List<BuildingStore> queryListByTag(Integer tagId) {		
+		String hql = "select bs from BuildingStore bs,StoreTag st where bs.id = st.storeId and tagId=:tagId";
+		Map<String,Object> paramMap = new HashMap<>();
+		paramMap.put("tagId",tagId);
+		return this.find(hql, paramMap);				
+	}
+	
 	@Override
 	public Long getStoreIdByMemberId(Long memberId) {
 		// TODO Auto-generated method stub
