@@ -25,8 +25,8 @@ import com.terry.test.BaseTest;
 @ContextConfiguration("classpath:applicationContext.xml")
 public class BuildingMallTest extends BaseTest{
 	
-	@Resource(name="buildingStoreServiceImpl")
-	BuildingStoreService buildingStoreServiceImpl;
+	@Resource(name="buildingStoreService")
+	BuildingStoreService buildingStoreService;
 	
 	/**
 	 * 获取建材类型列表
@@ -36,7 +36,7 @@ public class BuildingMallTest extends BaseTest{
 	 */
 	@Test
 	public void testGetTypeList() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		List<BuildingType> list = buildingStoreServiceImpl.getBuildingType();
+		List<BuildingType> list = buildingStoreService.getBuildingType();
 		this.printfList(list);
 	}
 	
@@ -48,8 +48,8 @@ public class BuildingMallTest extends BaseTest{
 	 */
 	@Test
 	public void testGetBuildingStore() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		//Page<BuildingStore> page =	buildingStoreServiceImpl.getStorePage(10, 1, 1);
-		//this.printfList(page.getRows());
+		Page<BuildingStore> page =	buildingStoreService.getStorePage(10, 1, new BuildingStore());
+		this.printfList(page.getRows());
 	}
 	
 }
