@@ -12,7 +12,7 @@ import javax.persistence.Table;
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "el_building_tag")
+@Table(name = "el_building_score")
 public class BuildingScore extends GenericEntity<Long>{
 	
 	private Double score;

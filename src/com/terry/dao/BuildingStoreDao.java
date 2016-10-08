@@ -15,4 +15,11 @@ public interface BuildingStoreDao extends BaseDao<BuildingStore>{
 	Long getStoreIdByMemberId(Long memberId);
 	
 	List<Map<String, Object>> queryStoreStatisticInfo();
+	
+	/**
+	 * 通过tag查询storeList
+	 * @param tagId
+	 * @return
+	 */
+	List<BuildingStore> queryListByTag(Integer tagId);
 }	

@@ -276,13 +276,13 @@ public class BuildingStoreController extends MyController {
 	 * 根据标签查询店铺
 	 */
 	@RequestMapping("/queryStoresByTag")
-	public ResponseEntity<String> queryStoreByTag(HttpServletRequest request,BuildingStore query) {
+	public ResponseEntity<String> queryStoreByTag(HttpServletRequest request,Integer tagId) {
 		Boolean status = true;
 		String msg = "查询成功";
 		List<BuildingStore> list = null;
 		
 		try{
-			list = buildingStoreService.queryStoresByTag(query);
+			list = buildingStoreService.queryStoresByTag(tagId);
 		}
 		catch(Exception e){
 			status = false;
@@ -296,17 +296,24 @@ public class BuildingStoreController extends MyController {
 	 * 保存评分
 	 */
 	@RequestMapping("/queryStoreByTag")
-	public ResponseEntity<String> queryAllBuiding(HttpServletRequest request,BuildingScore scoreQuery) {
+	public ResponseEntity<String> queryAllBuiding(HttpServletRequest request,BuildingScore score) {
 		Boolean status = true;
-		String msg = "查询成功";				
-		try{
-			buildingStoreService.saveScore(scoreQuery, request);
-		}
-		catch(Exception e){
+		String msg = "保存成功";	
+		WeixinUser user = (WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);
+		if(user == null) {
 			status = false;
-			msg = "请求失败";
-			WeixinUser user = (WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);
-			log.error("用户"+user.getNickname()+"为店铺"+scoreQuery.getStoreId()+"评分"+scoreQuery.getScore()+"分,失败");
+			msg = "请先登录";
+		}
+		else {			
+			try{		
+				score.setUserId(user.getId());
+				buildingStoreService.saveScore(score);
+			}
+			catch(Exception e){
+				status = false;
+				msg = "请求失败";
+				log.error("用户"+user.getNickname()+"为店铺"+score.getStoreId()+"评分"+score.getScore()+"分,失败");
+			}
 		}
 		return renderMsg(status, msg);
 	}

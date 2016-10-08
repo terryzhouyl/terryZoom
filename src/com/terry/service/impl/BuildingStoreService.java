@@ -23,6 +23,8 @@ import com.terry.dao.BuildingScoreDao;
 import com.terry.dao.BuildingStoreDao;
 import com.terry.dao.BuildingTagDao;
 import com.terry.dao.BuildingTypeDao;
+import com.terry.dao.StoreTagDao;
+import com.terry.dao.impl.StoreTagDaoImpl;
 import com.terry.dao.impl.WeixinUserDaoImpl;
 import com.terry.dao.support.Page;
 import com.terry.entity.BuildingFocus;
@@ -30,6 +32,7 @@ import com.terry.entity.BuildingScore;
 import com.terry.entity.BuildingStore;
 import com.terry.entity.BuildingTag;
 import com.terry.entity.BuildingType;
+import com.terry.entity.StoreTag;
 import com.terry.entity.WeixinUser;
 import com.terry.entity.specialbean.UploadFile;
 import com.terry.util.ImageUtil;
@@ -54,6 +57,9 @@ public class BuildingStoreService extends BaseService{
 	
 	@Resource(name="buildingScoreDaoImpl")
 	private BuildingScoreDao buildingScoreDaoImpl;
+	
+	@Resource(name="storeTagDaoImpl")
+	private StoreTagDao storeTagDaoImpl;
 		 
 	
 	public int weixinLogin(HttpServletRequest request, String code) {
@@ -75,9 +81,14 @@ public class BuildingStoreService extends BaseService{
 		if(pageNum == null) {
 			pageNum = 1;
 		}
+		Page<BuildingStore> page = buildingStoreDaoImpl.queryPage(pageSize, pageNum,query);
+		StoreTag tagQuery = new StoreTag();
 		
-		return buildingStoreDaoImpl.queryPage(pageSize, pageNum,query);		
-		
+		for(BuildingStore store : page.getRows()){
+			tagQuery.setStoreId(store.getId());
+			store.setTagList(queryStoreTag(tagQuery));
+		}		
+		return page;				
 	}
 
 	public BuildingStore storeInfo(HttpServletRequest request,Long storeId) {
@@ -321,23 +332,30 @@ public class BuildingStoreService extends BaseService{
 	 * 根据标签查询店铺
 	 * @return
 	 */
-	public List<BuildingStore> queryStoresByTag(BuildingStore query) {		
-		
-		
-		
-		return buildingStoreDaoImpl.queryList(query);
+	public List<BuildingStore> queryStoresByTag(Integer tagId) {						
+		return buildingStoreDaoImpl.queryListByTag(tagId);
+	}
+	
+	public List<StoreTag> queryStoreTag(StoreTag storeTagQuery){
+		return storeTagDaoImpl.queryList(storeTagQuery);
 	}
 	
 	/**
 	 * 店铺评分
 	 */
-	public void saveScore(BuildingScore score,HttpServletRequest request){
-		WeixinUser wxuser =	(WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);		
-		score.setUserId(wxuser.getId());
+	public void saveScore(BuildingScore score){
+		
+		//WeixinUser wxuser =	(WeixinUser)request.getSession().getAttribute(CommonVar.SESSION_WEIXIN);		
+		//score.setUserId(wxuser.getId());
+		
+		List<BuildingScore> scoreList = buildingScoreDaoImpl.queryList(score);
+		if(scoreList.size() > 0){
+			throw new BusinessException("对不起，您已经评过分了");
+		}
 		score.setCreateTime(new Date());				
 		buildingScoreDaoImpl.saveOrUpdate(score);
 		
-		double avgScore =  buildingScoreDaoImpl.getAvgScore();
+		double avgScore =  buildingScoreDaoImpl.getAvgScore(score.getStoreId());
 		BuildingStore store = buildingStoreDaoImpl.get(BuildingStore.class,score.getStoreId());
 		store.setScore(avgScore);
 		buildingStoreDaoImpl.saveOrUpdate(store);
