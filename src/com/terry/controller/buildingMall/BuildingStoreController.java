@@ -71,7 +71,7 @@ public class BuildingStoreController extends MyController {
 		/********测试数据，获取用户的店铺信息**********/	
 	    request.getSession().setAttribute(CommonVar.SESSION_WEIXIN, user);
 	    
-	    
+	    //怎么弄都不对，有点尴尬
 	    log.info(user.getNickname()+"登录了系统");
 	    
 		List<BuildingType> typeList = buildingStoreService.getBuildingType();
