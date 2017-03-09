@@ -18,7 +18,7 @@ public interface CommonVar {
 	public static String SESSION_STORE = "SESSION_STORE";
 	
 	/***上传图片前缀****/
-	public static String IMG_PREFIX = "/resource/enjoylife";
+	public static String IMG_PREFIX = "/resource/enjoylife/source";
 	
 	/******成功与否标志********/
 	public static int SF_SUCCESS = 1;
