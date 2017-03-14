@@ -38,7 +38,7 @@ public class KeywordReplyService{
 				oldKeywordReply.setKeyword(keywordReply.getKeyword());
 				oldKeywordReply.setReplyContent(keywordReply.getReplyContent());
 				oldKeywordReply.setReplyType(keywordReply.getReplyType());
-				oldKeywordReply.setMaterialId(keywordReply.getMaterialId());
+				oldKeywordReply.setRelativeId((keywordReply.getRelativeId()));
 				keywordReplyDaoImpl.saveOrUpdate(oldKeywordReply);
 			}
 		}						

@@ -15,7 +15,23 @@
 		var ctx = "${ctx}";
 	</script>		
     <script type="text/javascript" src="${ctx}/resource/system/phone/buildingMall/js/index.js" ></script>
-		
+	<script>
+	$.ajax({
+		type: "post",
+		url : "${ctx}/weixin/getUserInfo.json",
+		dataType: "json",
+		data:{},
+		success: function(result) {
+			if(result.status == true||result.status == "true"){// 获取用户成功			
+				console.log(result.data);
+			}
+			else {  //进行授权登录操作
+				var hrefUrl = window.location.href;
+				window.location.href="${ctx}/weixin/wxbaseLogin.htm?returnUrl="+hrefUrl;
+			}
+		}	
+	})
+</script>	
 </head>
 
 <body>
@@ -56,14 +72,13 @@
 </div>
 
 
+
 <!--版权-->
 <div class="copyright mb50">
 	CopyRight©2016 享居派 All Rights Reserved
 </div>
 
 <jsp:include page="../footer.jsp" />
-<script>
-	
-</script>
+
 </body>
 </html>

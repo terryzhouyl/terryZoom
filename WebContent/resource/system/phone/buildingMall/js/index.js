@@ -6,6 +6,7 @@
         
     var typeId = 1;
     
+    
     //添加底部菜单样式
     $(function(){
     	addFooterClass(0);
@@ -144,7 +145,7 @@
 //页面加载完毕执行此js
 $(document).ready(function() {	
 	//默认加载默认分类显示所有商户
-	//setTimeout(function(){findMerchantList(1,1);},500); 
+	//setTimeout(function(){findMerchantList(1,1);},500);
 	findMerchantList(1,1);
 });
  

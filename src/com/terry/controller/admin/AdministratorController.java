@@ -22,6 +22,5 @@ public class AdministratorController {
 	public String index(Model model,HttpServletRequest request) throws Exception {
 		return "/admin/index";
 	}
-	
-	
+		
 }

@@ -23,6 +23,6 @@ public class MaterialManager {
 		String url = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=ACCESS_TOKEN";
 		String newUrl = url.replace("ACCESS_TOKEN",at.getToken());
 		
-		JSONObject jsonObject = WeixinUtil.httpRequest(newUrl, "POST", json);
+		//JSONObject jsonObject = WeixinUtil.httpRequest(newUrl, "POST", json);
 	}
 }

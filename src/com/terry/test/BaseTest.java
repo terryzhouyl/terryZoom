@@ -49,7 +49,7 @@ public class BaseTest {
 
 	public void printfMap(Map<String,Object> map) {
 		for(String s:map.keySet()) {
-			System.out.println("s : "+map.get(s));
+			System.out.println(s+":"+map.get(s));
 		}
 	}
 	

@@ -394,4 +394,28 @@ public class BaseDaoImpl<T> implements BaseDao<T>{
 		return getSession().createSQLQuery(sql).executeUpdate();
 	}
 
+	/**
+	 * 根据指定属性的值获取列表
+	 */
+	@Override
+	public List<T> getListBy(Class<T> entityClass, String propertyName, Object value) {
+		// TODO Auto-generated method stub
+		Criterion criterion = Restrictions.eq(propertyName, value);
+		return (List<T>)getSession().createCriteria(entityClass).add(criterion).list();
+	}
+	
+	@Override
+	public List<T> getListBy(Class<T> entityClass, String propertyName, Object value, String orderBy, boolean isAsc) {
+		// TODO Auto-generated method stub
+		Criterion criterion = Restrictions.eq(propertyName, value);
+		Criteria c = getSession().createCriteria(entityClass);
+		c.add(criterion);
+		if (isAsc) {
+			c.addOrder(Order.asc(orderBy));
+		} else {
+			c.addOrder(Order.desc(orderBy));
+		}
+		return (List<T>)c.list();
+	}
+
 }

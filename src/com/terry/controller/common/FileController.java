@@ -65,7 +65,6 @@ public class FileController extends MyController {
 			success = false;
 			msg = "上传失败";
 		}
-		
 		return renderData(success, msg, filePath.toString());
 	}
 	

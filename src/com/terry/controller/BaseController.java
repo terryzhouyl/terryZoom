@@ -9,19 +9,22 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.terry.dao.support.Page;
+import com.terry.test.LogTest;
 import com.terry.util.JacksonJsonUtil;
 
 
 public class BaseController {
 	
-	public Logger log = Logger.getLogger(BaseController.class);
+	//public Logger log = Logger.getLogger(BaseController.class);
+	public Logger log = LoggerFactory.getLogger(BaseController.class);
 
 	/**
 	 * 返回服务器地址 like http://192.168.1.1:8441/UUBean/

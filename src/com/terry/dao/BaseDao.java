@@ -21,6 +21,10 @@ public interface BaseDao<T> {
 	public long findCount(Class<T> entityClazz);
 	//根据单个属性获取实体对象
 	public T getBy(Class<T> entityClass,String propertyName,Object value); 
+	//根据单个属性查询实体集合
+	public List<T> getListBy(Class<T> entityClass,String propertyName,Object value);
+	//根据单个属性查询实体集合 并排序
+	public List<T> getListBy(Class<T> entityClass,String propertyName,Object value,String orderBy,boolean isAsc);
 	//批量更新实体
 	public void batchSaveOrUpdate(List<T> entitys);
 }

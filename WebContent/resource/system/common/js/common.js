@@ -77,6 +77,28 @@ function checkFile(files,parentNodeStr,previewImgHtml) {
 }
 
 
+function login() {
+	$.ajax({
+		type:"post",
+		url:url,
+		data:data,
+		async:false,
+		success :function (result){
+			result = eval("("+result+")");
+        	if(result.status == "true" || result.status == true){
+        		returnData = result.data;
+        	}
+        	else {
+        		alert(result.msg);
+        	}
+		}
+	});
+	return returnData;
+}
+
+
+
+
 
 
 

@@ -49,6 +49,8 @@ public class MessageUtil {
 	public static final String EVENT_UNSUBSCRIBE = "unsubscribe";
 	//事件类型：CLICK(自定义菜单点击事件)
 	public static final String EVENT_CLICK = "CLICK";
+	//事件类型：scan(扫描)
+	public static final String EVENT_SCAN = "SCAN";
 	
 	
 	public static final String MESSAGE_VIDEO = "video";	

@@ -62,20 +62,21 @@ public class BuildingStoreController extends MyController {
 	public String index(Model model,HttpServletRequest request){ 
 		
 		/********测试数据，模拟用户登录的入口**********/
-		WeixinUser user = new WeixinUser();
-		user.setId(1L);
-		user.setNickname("刘欣星");
-		user.setHeadimgurl("http://wx.qlogo.cn/mmopen/PL5y7QQHZgJicBb9y5ibeyHIydlrccylPOqYK08icarePso7zyyedGumdHTvv5MjZsLVjibdunBqNhiaMYRO0J5KNmBBicJv9Ol3Fh/0");	
-		user.setSex(1);
+//		WeixinUser user = new WeixinUser();
+//		user.setId(1L);
+//		user.setNickname("刘欣星");
+//		user.setHeadimgurl("http://wx.qlogo.cn/mmopen/PL5y7QQHZgJicBb9y5ibeyHIydlrccylPOqYK08icarePso7zyyedGumdHTvv5MjZsLVjibdunBqNhiaMYRO0J5KNmBBicJv9Ol3Fh/0");	
+//		user.setSex(1);
 		
 		/********测试数据，获取用户的店铺信息**********/	
-	    request.getSession().setAttribute(CommonVar.SESSION_WEIXIN, user);
+	    //request.getSession().setAttribute(CommonVar.SESSION_WEIXIN, user);
 	    
 	    //怎么弄都不对，有点尴尬
-	    log.info(user.getNickname()+"登录了系统");
-	    
+	    //log.info(user.getNickname()+"登录了系统");
+		log.info("用户登录.....");
 		List<BuildingType> typeList = buildingStoreService.getBuildingType();
 		model.addAttribute("typeList",typeList);
+		
 		
 		return "phone/buildingMall/index";
 	}

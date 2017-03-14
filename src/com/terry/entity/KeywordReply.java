@@ -20,7 +20,8 @@ public class KeywordReply {
 	private String keyword;
 	private String replyType;
 	private String replyContent;
-	private Integer materialId;
+	private Integer relativeId;
+	private Integer messageType;
 	private Date createTime;
 	public Integer getId() {
 		return id;
@@ -46,18 +47,23 @@ public class KeywordReply {
 	public void setReplyContent(String replyContent) {
 		this.replyContent = replyContent;
 	}
-	public Integer getMaterialId() {
-		return materialId;
-	}
-	public void setMaterialId(Integer materialId) {
-		this.materialId = materialId;
-	}
 	public Date getCreateTime() {
 		return createTime;
 	}
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
+	public Integer getRelativeId() {
+		return relativeId;
+	}
+	public void setRelativeId(Integer relativeId) {
+		this.relativeId = relativeId;
+	}
+	public Integer getMessageType() {
+		return messageType;
+	}
+	public void setMessageType(Integer messageType) {
+		this.messageType = messageType;
+	}
 	
 }
